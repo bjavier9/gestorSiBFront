@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service'; // <-- RUTA ACTUALIZADA
+import { AuthService, LoginResult } from '../../core/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -52,8 +52,12 @@ export class LoginComponent {
       this.error.set('');
       const { email, password } = this.loginForm.value;
       this.authService.login(email!, password!).subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
+        next: (result: LoginResult) => {
+          if (result.isSuperAdmin) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: (err: any) => {
           this.error.set('Invalid credentials or connection error');
