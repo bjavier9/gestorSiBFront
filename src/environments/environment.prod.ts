@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  firebaseApiKey: 'AIzaSyD6zReyecIiMKqNVbUe7d6bGKsO2Vlum3E',
-  apiHost: 'https://gestor-sip.vercel.app'};
+  apiHost: 'https://gestor-sip.vercel.app',
+  firebaseApiKey: 'AIzaSyD6zReyecIiMKqNVbUe7d6bGKsO2Vlum3E'
+};
