@@ -18,18 +18,11 @@ export class CompaniaService {
   }
 
   create(companyData: Partial<Compania>): Observable<Compania> {
-    const newCompany: Compania = {
-      id: String(Math.floor(Math.random() * 1000)),
-      ...companyData,
-      activo: true,
-    } as Compania;
-    return of(newCompany).pipe(delay(500));
+    return this.http.post<Compania>(companyEndpoints.create, companyData);
   }
 
   update(id: string, companyData: Partial<Compania>): Observable<Compania> {
-    // Simulación: en una app real, aquí se obtendría el estado actual antes de actualizar.
-    const updatedCompany: Partial<Compania> = { id, ...companyData };
-    return of(updatedCompany as Compania).pipe(delay(500));
+    return this.http.put<Compania>(companyEndpoints.update(id), companyData);
   }
 
   /**
@@ -38,10 +31,8 @@ export class CompaniaService {
    * @param nuevoEstatus - El nuevo estado (true para activo, false para inactivo).
    * @returns Un observable que confirma la operación.
    */
-  changeStatus(id: string, nuevoEstatus: boolean): Observable<{ id: string; status: boolean }> {
-    // Simula una llamada a la API para cambiar el estado
-    console.log(`Cambiando estado de la compañía ${id} a ${nuevoEstatus}`);
-    return of({ id: id, status: nuevoEstatus }).pipe(delay(300));
+  changeStatus(id: string, nuevoEstatus: boolean): Observable<void> {
+    const endpoint = nuevoEstatus ? companyEndpoints.activate(id) : companyEndpoints.deactivate(id);
+    return this.http.put<void>(endpoint, {});
   }
-
 }
