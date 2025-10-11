@@ -1,0 +1,17 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espacio entre los campos del formulario */
+  padding-top: 20px; /* Espacio debajo del título */
+}
+
+mat-dialog-actions {
+  padding-top: 24px; /* Espacio encima de los botones */
+}
+
+/* Ajustes para el spinner dentro del botón */
+button[mat-flat-button] span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

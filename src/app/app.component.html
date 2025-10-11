@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+    <span>SIB</span>
+    <span class="spacer"></span>
+    <app-theme-toggle></app-theme-toggle>
+    @if (isLoggedIn()) {
+        <button mat-button (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Cerrar sesión
+        </button>
+    }
+</mat-toolbar>
+
+<main>
+    <router-outlet></router-outlet>
+</main>

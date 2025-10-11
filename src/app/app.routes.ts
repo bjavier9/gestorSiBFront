@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component'; // Importa el nuevo layout
 
 export const routes: Routes = [
   {
@@ -14,13 +15,18 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    component: AdminLayoutComponent, // El layout se convierte en el componente principal de esta ruta
     canActivate: [authGuard, adminGuard],
     children: [
       {
         path: 'dashboard',
-        // Corrección: Apuntar al archivo correcto y usar la clase correcta.
         loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then(m => m.AdminDashboardComponent)
       },
+      {
+        path: 'companies',
+        loadComponent: () => import('./pages/admin/companies/companies').then(m => m.CompaniesComponent)
+      },
+      // La redirección ahora está correctamente anidada
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
