@@ -1,67 +1,54 @@
-﻿# Blueprint SIB - Gestor Frontend
+# Vision General del Proyecto: SIB - Sistema de Intermediacion de Seguros
 
-Este documento sirve como punto de referencia vivo para la estructura, alcance y plan de trabajo del proyecto SIB. El objetivo principal es ofrecer un front-end Angular facilmente mantenible que refleje la separacion de responsabilidades del dominio de negocio.
+Este documento resume la arquitectura, funcionalidades y el plan de desarrollo de SIB, una aplicacion web construida con Angular enfocada en la gestion de intermediarios de seguros.
 
-## 1. Objetivo del Sistema
+## 1. Proposito y Capacidades
 
-- Facilitar la administracion de companias de corretaje mediante operaciones CRUD y cambio de estado.
-- Ofrecer flujos diferenciados para usuarios administrativos y no administrativos a traves de rutas protegidas.
-- Mantener una experiencia moderna usando Angular standalone, Signals y Angular Material con cambio de tema.
+El sistema habilita a usuarios autenticados para administrar companias de corretaje de forma eficiente:
 
-## 2. Arquitectura Actual
+- **Gestion completa de companias (CRUD)**: creacion, edicion, activacion/inactivacion y consulta de registros.
+- **Autenticacion diferenciada**: flujo de inicio de sesion con redireccion a dashboard publico o panel administrativo.
+- **Interfaz moderna**: componentes standalone, Signals y Angular Material para mantener una UI consistente y reactiva.
+- **Temas dinamicos**: interruptor de tema centralizado en ThemeService consumido por componentes compartidos.
 
-```
-src/app/
-├── core/
-│   ├── api/                # Endpoints centralizados
-│   ├── guards/             # authGuard, adminGuard
-│   ├── interceptors/       # auth.interceptor
-│   ├── models/             # Tipos compartidos (Compania, User)
-│   └── services/           # AuthService, CompaniaService, ThemeService
-├── features/
-│   ├── admin/
-│   │   ├── admin-layout/   # Shell del panel admin
-│   │   ├── dashboard/      # Dashboard administrativo
-│   │   └── companies/
-│   │       ├── components/ # CompanyFormComponent
-│   │       └── pages/      # CompaniesComponent
-│   ├── auth/
-│   │   └── login/          # LoginComponent
-│   └── dashboard/          # DashboardComponent (usuarios generales)
-└── shared/
-    └── components/         # ThemeToggleComponent, ConfirmationDialogComponent
-```
+## 2. Arquitectura Base
 
-- Los alias `@core`, `@features` y `@shared` estan configurados en `tsconfig.json` y `tsconfig.app.json` para importar sin rutas relativas.
-- `app.routes.ts` carga los features de manera lazy y aplica guards desde `@core`.
-- `ThemeToggleComponent` y los dialogos viven en `shared` para promover la reutilizacion transversal.
+La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentro de src/app:
 
-## 3. Capas Funcionales
+- **core/**: servicios, modelos, interceptores, guards y definiciones de API reutilizables en todos los features.
+- **features/**: casos de uso encapsulados por dominio funcional.
+  - **admin/**: layout principal del panel, dashboard y submodulos de administracion.
+    - admin-layout/: shell con toolbar y espacio para rutas hijas protegidas.
+    - companies/: incluye paginas (pages/companies) y componentes especificos (components/company-form).
+    - dashboard/: tarjetas de navegacion y accesos rapidos para tareas administrativas.
+  - **auth/**: componentes de autenticacion como el formulario de login.
+  - **dashboard/**: dashboard general para usuarios no administradores.
+  - **home/**: contiene el `HomeRedirectComponent` para redirigir a los usuarios a su dashboard correspondiente.
+- **shared/**: componentes reutilizables (por ejemplo, theme-toggle, confirmation-dialog) desacoplados de dominios especificos.
+- **Alias de paths (@core, @shared, @features)** definidos en tsconfig.json y tsconfig.app.json para mantener imports legibles tras la reorganizacion.
+- **Enrutamiento**: app.routes.ts carga lazy cada feature y aplica guards (authGuard, adminGuard) desde @core.
 
-- **Autenticacion (`features/auth`)**: formulario reactivo, control de visibilidad de password, redireccion condicional segun rol.
-- **Dashboard general (`features/dashboard`)**: bienvenida basica y accion de logout para usuarios autenticados no administradores.
-- **Panel administrativo (`features/admin`)**:
-  - Layout con toolbar y outlet secundario.
-  - Dashboard administrativo con accesos rapidos.
-  - Gestion de companias con filtrado, edicion inline via dialogo, snackbar y control de estado activo/inactivo.
-- **Servicios de dominio (`core/services`)**: encapsulan llamadas HTTP y exponen observables usados por los features.
+## 3. Funcionalidades Actuales
 
-## 4. Estado de las Funcionalidades
+- **Login (/login)**: formulario reactivo con feedback de carga y manejo de errores.
+- **Dashboard general (/dashboard)**: muestra saludo contextual y permite cerrar sesion.
+- **Panel administrativo (/admin)**:
+  - Layout persistente con toolbar, logo y salida de rutas.
+  - Dashboard de administracion con accesos rapidos.
+  - Gestion de companias con lista filtrable, creacion/edicion via MatDialog, y cambio de estado con dialogo de confirmacion y snackbar.
+- **Redireccion Inteligente**: Un `HomeRedirectComponent` se encarga de redirigir a los usuarios a su dashboard correspondiente al recargar la pagina.
+- **Servicios base**: AuthService, CompaniaService, ThemeService, HTTP interceptor para adjuntar credenciales y endpoints centralizados.
 
-- CRUD de companias: **implementado** (creacion, actualizacion y cambio de estado via CompaniaService).
-- Seguridad: **implementada** (guards + interceptor para token).
-- UI standalone y control de tema: **implementado**.
-- Documentacion de la arquitectura: **actualizada** en este blueprint.
+## 4. Plan de Desarrollo
 
-## 5. Roadmap Propuesto
+### Fases anteriores (completadas)
+1. **Fase 1: Estructura inicial y visualizacion**.
+2. **Fase 2: Formulario de companias**.
+3. **Fase 3: Cambio de estado (soft delete)**.
+4. **Fase 4: Migracion a Angular Material**.
+5. **Fase 5: Reorganizacion por features/core/shared y adopcion de alias de paths**.
 
-1. **Dominios y contratos**
-   - [ ] Extraer interfaces/ports en `core` para desacoplar `CompaniaService` de la implementacion HTTP.
-2. **Documentacion tecnica**
-   - [ ] Registrar flujos de autenticacion y companias (diagramas ligeros o markdown) dentro de `core`.
-3. **Calidad y pruebas**
-   - [ ] Agregar pruebas unitarias para `CompaniesComponent`, `CompanyFormComponent` y guards (`authGuard`, `adminGuard`).
-4. **Experiencia de usuario**
-   - [ ] Revisar copy y normalizar tildes (la base actual es ASCII) antes de pasar a ambientes productivos.
-
-Este blueprint debe revisarse y actualizarse con cada iteracion relevante para mantener alineado al equipo sobre estado, alcance y proximo trabajo.
+### Fase actual: Consolidacion de dominio y pruebas (pendiente)
+- [ ] Definir contratos de dominio (ports) para desacoplar CompaniaService de la infraestructura HTTP.
+- [ ] Documentar casos de uso y flujos clave en core (auth y companias).
+- [ ] Incorporar pruebas unitarias relevantes para componentes criticos (companies, company-form, guards).

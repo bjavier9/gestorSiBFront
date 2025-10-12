@@ -6,12 +6,16 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const currentUser = authService.currentUser();
-
-  if (currentUser && currentUser.isSuperAdmin) {
+  if (authService.isAuthenticated() && authService.currentUser()?.isSuperAdmin) {
     return true;
-  } else {
-    // Redirigir a la página de dashboard normal si no es superadmin
+  }
+  
+  // Si el usuario está autenticado pero no es SuperAdmin, redirige al dashboard.
+  if (authService.isAuthenticated()) {
     return router.createUrlTree(['/dashboard']);
   }
+  
+  // Si no está autenticado, auth.guard ya debería haberlo redirigido a /login,
+  // pero como fallback, lo hacemos aquí también.
+  return router.createUrlTree(['/login']);
 };

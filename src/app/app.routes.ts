@@ -1,7 +1,8 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { adminGuard } from '@core/guards/admin.guard';
-import { AdminLayoutComponent } from '@features/admin/admin-layout/admin-layout.component'; // Importa el nuevo layout
+import { AdminLayoutComponent } from '@features/admin/admin-layout/admin-layout.component';
+import { HomeRedirectComponent } from '@features/home/home-redirect.component';
 
 export const routes: Routes = [
   {
@@ -15,7 +16,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminLayoutComponent, // El layout se convierte en el componente principal de esta ruta
+    component: AdminLayoutComponent,
     canActivate: [authGuard, adminGuard],
     children: [
       {
@@ -26,12 +27,13 @@ export const routes: Routes = [
         path: 'companies',
         loadComponent: () => import('@features/admin/companies/pages/companies/companies.component').then(m => m.CompaniesComponent)
       },
-      // La redirecciÃ³n ahora estÃ¡ correctamente anidada
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: '**', redirectTo: '/dashboard' }
+  {
+    path: '',
+    component: HomeRedirectComponent,
+    canActivate: [authGuard]
+  },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
-
-
