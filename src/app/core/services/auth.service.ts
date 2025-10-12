@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+﻿import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map, switchMap, catchError } from 'rxjs/operators';
@@ -29,6 +29,9 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private readonly GOOGLE_API_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseApiKey}`;
+  private readonly TOKEN_KEY = 'token';
+  private readonly TOKEN_EXPIRATION_KEY = 'token_expiration';
+  private readonly USER_KEY = 'user';
 
   currentUser = signal<User | null | undefined>(undefined);
   isLoggedIn = computed(() => !!this.currentUser());
@@ -38,32 +41,60 @@ export class AuthService {
   }
 
   private checkAuthentication(): void {
-    const token = localStorage.getItem('token');
-    if (token && !this.isTokenExpired()) {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+
+    if (!token) {
+      this.currentUser.set(null);
+      return;
+    }
+
+    if (this.isTokenExpired()) {
+      this.logout();
+      return;
+    }
+
+    const storedUser = localStorage.getItem(this.USER_KEY);
+
+    if (storedUser) {
       try {
-        const decodedToken: DecodedToken = JSON.parse(atob(token.split('.')[1]));
-        const user: User = {
-          token: token,
-          email: decodedToken.email, // Añadido para cumplir con la interfaz User
-          isSuperAdmin: decodedToken.role === 'SuperAdmin',
-          name: decodedToken.unique_name,
-        };
-        this.currentUser.set(user);
-      } catch (error) {
-        this.logout();
+        const parsedUser = JSON.parse(storedUser) as User;
+        this.currentUser.set({
+          ...parsedUser,
+          token,
+        });
+        return;
+      } catch {
+        localStorage.removeItem(this.USER_KEY);
       }
-    } else if (token) {
+    }
+
+    try {
+      const decodedToken: DecodedToken = JSON.parse(atob(token.split('.')[1]));
+      const user: User = {
+        token,
+        email: decodedToken.email,
+        isSuperAdmin: decodedToken.role === 'SuperAdmin',
+        name: decodedToken.unique_name,
+      };
+      this.currentUser.set(user);
+    } catch {
       this.logout();
     }
   }
 
   private isTokenExpired(): boolean {
-    const expiration = localStorage.getItem('token_expiration');
+    const expiration = localStorage.getItem(this.TOKEN_EXPIRATION_KEY);
     if (!expiration) return true;
     return new Date().getTime() > new Date(expiration).getTime();
   }
 
   isAuthenticated(): boolean {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (!token) {
+      this.currentUser.set(null);
+      return false;
+    }
+
     if (this.isTokenExpired()) {
       this.logout();
       return false;
@@ -72,7 +103,6 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<LoginResult> {
-    // Simulación de respuesta de Firebase
     const mockFirebaseResponse: FirebaseLoginResponse = {
       idToken: environment.mockIdToken
     };
@@ -84,12 +114,11 @@ export class AuthService {
       map(appResponse => {
         const userData = appResponse.body.data;
         const decodedToken: DecodedToken = JSON.parse(atob(userData.token.split('.')[1]));
-        const expirationDate = new Date(decodedToken.exp * 1000);
+        const sessionExpiration = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
 
-        const sessionExpiration = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); // 2 horas
-
-        localStorage.setItem('token', userData.token);
-        localStorage.setItem('token_expiration', sessionExpiration.toISOString());
+        localStorage.setItem(this.TOKEN_KEY, userData.token);
+        localStorage.setItem(this.TOKEN_EXPIRATION_KEY, sessionExpiration.toISOString());
+        localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
         this.currentUser.set(userData);
 
         return { isSuperAdmin: !!userData.isSuperAdmin };
@@ -102,8 +131,9 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('token_expiration');
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.TOKEN_EXPIRATION_KEY);
+    localStorage.removeItem(this.USER_KEY);
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
