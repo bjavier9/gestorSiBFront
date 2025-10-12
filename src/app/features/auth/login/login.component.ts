@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./login.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -40,6 +40,17 @@ export class LoginComponent {
   loading = signal(false);
   error = signal('');
   hidePassword = signal(true);
+
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      const user = this.authService.currentUser();
+      if (user?.isSuperAdmin) {
+        this.router.navigate(['/admin/dashboard']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
+    }
+  }
 
   togglePasswordVisibility(event: MouseEvent): void {
     event.stopPropagation();
@@ -71,4 +82,3 @@ export class LoginComponent {
     }
   }
 }
-

@@ -1,4 +1,4 @@
-﻿# Vision General del Proyecto: SIB - Sistema de Intermediacion de Seguros
+# Vision General del Proyecto: SIB - Sistema de Intermediacion de Seguros
 
 Este documento resume la arquitectura, funcionalidades y el plan de desarrollo de SIB, una aplicacion web construida con Angular enfocada en la gestion de intermediarios de seguros.
 
@@ -23,6 +23,7 @@ La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentr
     - dashboard/: tarjetas de navegacion y accesos rapidos para tareas administrativas.
   - **auth/**: componentes de autenticacion como el formulario de login.
   - **dashboard/**: dashboard general para usuarios no administradores.
+  - **home/**: contiene el `HomeRedirectComponent` para redirigir a los usuarios a su dashboard correspondiente.
 - **shared/**: componentes reutilizables (por ejemplo, theme-toggle, confirmation-dialog) desacoplados de dominios especificos.
 - **Alias de paths (@core, @shared, @features)** definidos en tsconfig.json y tsconfig.app.json para mantener imports legibles tras la reorganizacion.
 - **Enrutamiento**: app.routes.ts carga lazy cada feature y aplica guards (authGuard, adminGuard) desde @core.
@@ -35,6 +36,7 @@ La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentr
   - Layout persistente con toolbar, logo y salida de rutas.
   - Dashboard de administracion con accesos rapidos.
   - Gestion de companias con lista filtrable, creacion/edicion via MatDialog, y cambio de estado con dialogo de confirmacion y snackbar.
+- **Redireccion Inteligente**: Un `HomeRedirectComponent` se encarga de redirigir a los usuarios a su dashboard correspondiente al recargar la pagina.
 - **Servicios base**: AuthService, CompaniaService, ThemeService, HTTP interceptor para adjuntar credenciales y endpoints centralizados.
 
 ## 4. Plan de Desarrollo
