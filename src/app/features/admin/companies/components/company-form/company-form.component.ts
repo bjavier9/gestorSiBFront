@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -9,13 +9,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { CompaniaService } from '../../core/services/compania.service';
-import { Compania } from '../../core/models/compania.model';
+import { CompaniaService } from '@core/services/compania.service';
+import { Compania } from '@core/models/compania.model';
 
 @Component({
   selector: 'app-company-form',
-  templateUrl: './company-form.html',
-  styleUrls: ['./company-form.css'],
+  templateUrl: './company-form.component.html',
+  styleUrls: ['./company-form.component.css'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -72,14 +72,14 @@ export class CompanyFormComponent implements OnInit {
     saveOperation.subscribe({
       next: (savedCompany) => {
         this.isSaving.set(false);
-        const message = this.isEditMode ? 'Compañía actualizada con éxito' : 'Compañía creada con éxito';
+        const message = this.isEditMode ? 'CompaÃ±Ã­a actualizada con Ã©xito' : 'CompaÃ±Ã­a creada con Ã©xito';
         this.snackBar.open(message, 'Cerrar', { duration: 3000 });
         this.dialogRef.close(savedCompany);
       },
       error: (err) => {
-        console.error('Error al guardar la compañía:', err);
+        console.error('Error al guardar la compaÃ±Ã­a:', err);
         this.isSaving.set(false);
-        this.snackBar.open('Error al guardar la compañía', 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Error al guardar la compaÃ±Ã­a', 'Cerrar', { duration: 3000 });
       }
     });
   }
@@ -88,3 +88,4 @@ export class CompanyFormComponent implements OnInit {
     this.dialogRef.close();
   }
 }
+

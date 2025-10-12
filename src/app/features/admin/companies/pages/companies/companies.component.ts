@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -11,15 +11,15 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
-import { CompaniaService } from '../../../core/services/compania.service';
-import { Compania } from '../../../core/models/compania.model';
-import { CompanyFormComponent } from '../../../components/company-form/company-form';
-import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog/confirmation-dialog';
+import { CompaniaService } from '@core/services/compania.service';
+import { Compania } from '@core/models/compania.model';
+import { CompanyFormComponent } from '@features/admin/companies/components/company-form/company-form.component';
+import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-companies',
-  templateUrl: './companies.html',
-  styleUrls: ['./companies.css'],
+  templateUrl: './companies.component.html',
+  styleUrls: ['./companies.component.css'],
   imports: [
     CommonModule,
     RouterLink,
@@ -67,7 +67,7 @@ export class CompaniesComponent implements OnInit {
   loadCompanies(): void {
     this.companiaService.getCompanias().subscribe({
       next: (data) => this.allCompanies.set(data),
-      error: (err) => console.error('Error al cargar las compañías:', err),
+      error: (err) => console.error('Error al cargar las compaÃ±Ã­as:', err),
     });
   }
 
@@ -80,11 +80,11 @@ export class CompaniesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().pipe(filter(result => !!result)).subscribe((result: Compania) => {
-      if (company) { // Modo edición
+      if (company) { // Modo ediciÃ³n
         this.allCompanies.update(companies =>
           companies.map(c => c.id === result.id ? result : c)
         );
-      } else { // Modo creación
+      } else { // Modo creaciÃ³n
         this.allCompanies.update(companies => [...companies, result]);
       }
     });
@@ -95,7 +95,7 @@ export class CompaniesComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         title: `Confirmar ${action}`,
-        message: `¿Estás seguro de que deseas ${action} la compañía "${company.nombre}"?`
+        message: `Â¿EstÃ¡s seguro de que deseas ${action} la compaÃ±Ã­a "${company.nombre}"?`
       }
     });
 
@@ -108,14 +108,15 @@ export class CompaniesComponent implements OnInit {
               c.id === company.id ? { ...c, activo: newStatus } : c
             )
           );
-          const message = `Compañía ${company.nombre} ${newStatus ? 'activada' : 'desactivada'}`;
+          const message = `CompaÃ±Ã­a ${company.nombre} ${newStatus ? 'activada' : 'desactivada'}`;
           this.snackBar.open(message, 'Cerrar', { duration: 3000 });
         },
         error: (err) => {
-            console.error(`Error al cambiar el estado de la compañía ${company.id}:`, err);
+            console.error(`Error al cambiar el estado de la compaÃ±Ã­a ${company.id}:`, err);
             this.snackBar.open('Error al cambiar el estado', 'Cerrar', { duration: 3000 });
         }
       });
     });
   }
 }
+

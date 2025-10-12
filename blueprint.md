@@ -1,48 +1,52 @@
-# Visión General del Proyecto: SIB - Sistema de Intermediación de Seguros
+﻿# Vision General del Proyecto: SIB - Sistema de Intermediacion de Seguros
 
-Este documento describe la arquitectura, características y plan de desarrollo para el SIB, una aplicación web moderna construida con Angular, diseñada para facilitar la gestión de intermediarios de seguros.
+Este documento resume la arquitectura, funcionalidades y el plan de desarrollo de SIB, una aplicacion web construida con Angular enfocada en la gestion de intermediarios de seguros.
 
-## 1. Propósito y Capacidades
+## 1. Proposito y Capacidades
 
-El SIB es una plataforma intuitiva y eficiente que permite a los administradores gestionar la información crítica de las compañías de corretaje de seguros. Sus capacidades principales incluyen:
+El sistema habilita a usuarios autenticados para administrar companias de corretaje de forma eficiente:
 
-- **Gestión Completa de Compañías (CRUD):** Creación, lectura, actualización y cambio de estado (activación/desactivación) de las compañías.
-- **Interfaz Reactiva y Moderna:** Construida con las últimas características de Angular (Signals, Componentes Standalone) para una experiencia de usuario fluida y un mantenimiento sencillo.
-- **Diseño Profesional con Material Design:** Adopción de `@angular/material` para una interfaz de usuario consistente, accesible y estéticamente agradable.
+- **Gestion completa de companias (CRUD)**: creacion, edicion, activacion/inactivacion y consulta de registros.
+- **Autenticacion diferenciada**: flujo de inicio de sesion con redireccion a dashboard publico o panel administrativo.
+- **Interfaz moderna**: componentes standalone, Signals y Angular Material para mantener una UI consistente y reactiva.
+- **Temas dinamicos**: interruptor de tema centralizado en ThemeService consumido por componentes compartidos.
 
-## 2. Características Implementadas
+## 2. Arquitectura Base
 
-### Módulo de Compañías (`/admin/companies`)
+La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentro de src/app:
 
-#### Estilo y Diseño:
-- **Diseño con Angular Material:** La interfaz principal utiliza componentes como `MatToolbar`, `MatCard`, `MatButton`, `MatIcon` y `MatFabButton`.
-- **Layout en Grid Responsivo:** Las compañías se muestran en un grid de tarjetas que se adapta a diferentes tamaños de pantalla.
-- **Tarjetas de Compañía (`MatCard`):** Presentación semántica de la información (header, content, actions) y acciones contextuales.
-- **Indicadores de Estado Visual:** Se usan `MatIcon` con colores (`primary` para activo, `warn` para inactivo) para una rápida identificación del estado.
-- **Botón de Acción Flotante (`MatFabButton`):** Un FAB en la esquina inferior derecha para la acción principal de añadir una nueva compañía.
+- **core/**: servicios, modelos, interceptores, guards y definiciones de API reutilizables en todos los features.
+- **features/**: casos de uso encapsulados por dominio funcional.
+  - **admin/**: layout principal del panel, dashboard y submodulos de administracion.
+    - admin-layout/: shell con toolbar y espacio para rutas hijas protegidas.
+    - companies/: incluye paginas (pages/companies) y componentes especificos (components/company-form).
+    - dashboard/: tarjetas de navegacion y accesos rapidos para tareas administrativas.
+  - **auth/**: componentes de autenticacion como el formulario de login.
+  - **dashboard/**: dashboard general para usuarios no administradores.
+- **shared/**: componentes reutilizables (por ejemplo, theme-toggle, confirmation-dialog) desacoplados de dominios especificos.
+- **Alias de paths (@core, @shared, @features)** definidos en tsconfig.json y tsconfig.app.json para mantener imports legibles tras la reorganizacion.
+- **Enrutamiento**: app.routes.ts carga lazy cada feature y aplica guards (authGuard, adminGuard) desde @core.
 
-#### Funcionalidades:
-1.  **Listado de Compañías (Read):** Se consume un servicio para obtener y mostrar la lista de compañías.
-2.  **Creación de Compañía (Create):** Un formulario permite añadir nuevas compañías.
-3.  **Edición de Compañía (Update):** El mismo formulario se reutiliza para editar datos existentes.
-4.  **Cambio de Estado (Soft Delete):** Se puede activar o desactivar una compañía, en lugar de borrarla.
+## 3. Funcionalidades Actuales
 
-### Dashboard (`/admin/dashboard`)
+- **Login (/login)**: formulario reactivo con feedback de carga y manejo de errores.
+- **Dashboard general (/dashboard)**: muestra saludo contextual y permite cerrar sesion.
+- **Panel administrativo (/admin)**:
+  - Layout persistente con toolbar, logo y salida de rutas.
+  - Dashboard de administracion con accesos rapidos.
+  - Gestion de companias con lista filtrable, creacion/edicion via MatDialog, y cambio de estado con dialogo de confirmacion y snackbar.
+- **Servicios base**: AuthService, CompaniaService, ThemeService, HTTP interceptor para adjuntar credenciales y endpoints centralizados.
 
-- **Tarjeta de Navegación Personalizada:** La tarjeta para gestionar compañías muestra el logo de la empresa para una identidad de marca coherente.
+## 4. Plan de Desarrollo
 
-## 3. Plan de Desarrollo
+### Fases anteriores (completadas)
+1. **Fase 1: Estructura inicial y visualizacion**.
+2. **Fase 2: Formulario de companias**.
+3. **Fase 3: Cambio de estado (soft delete)**.
+4. **Fase 4: Migracion a Angular Material**.
+5. **Fase 5: Reorganizacion por features/core/shared y adopcion de alias de paths**.
 
-### Fases Anteriores (Completadas)
--   **Fase 1: Estructura y Visualización (Completada)** - Creación de la estructura base y visualización de datos.
--   **Fase 2: Creación y Edición (Completada)** - Implementación del formulario para crear y editar compañías.
--   **Fase 3: Cambio de Estado (Completada)** - Funcionalidad de borrado lógico (activar/desactivar).
--   **Fase 4: Migración a Angular Material (Completada)** - Se migró la vista principal de compañías a componentes de Material.
-
-### Fase Actual
-
--   **Fase 5: Migración a `MatDialog` y Formulario Responsivo (En progreso)**
-    -   [ ] **Paso 1: Refactorizar `CompaniesComponent` para usar `MatDialog`:** Se inyectará `MatDialog` y se modificará el método para abrir el formulario, eliminando la lógica del modal basado en `*ngIf`.
-    -   [ ] **Paso 2: Transformar `CompanyFormComponent` para el Diálogo:** Se adaptará el componente del formulario para que funcione dentro de un diálogo de Material, utilizando `MatDialogRef` para cerrarlo y `MAT_DIALOG_DATA` para recibir datos.
-    -   [ ] **Paso 3: Rediseñar Formulario con Componentes de Material:** Se reemplazarán los `<input>` y `<label>` por `<mat-form-field>`, `matInput`, `mat-slide-toggle` y `mat-dialog-actions` para un diseño totalmente responsivo y coherente.
-    -   [ ] **Paso 4: Limpieza y Verificación:** Se eliminará el CSS obsoleto y se verificará que el diálogo funcione y se vea correctamente en todas las pantallas.
+### Fase actual: Consolidacion de dominio y pruebas (pendiente)
+- [ ] Definir contratos de dominio (ports) para desacoplar CompaniaService de la infraestructura HTTP.
+- [ ] Documentar casos de uso y flujos clave en core (auth y companias).
+- [ ] Incorporar pruebas unitarias relevantes para componentes criticos (companies, company-form, guards).

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AuthService } from '../core/services/auth.service';
+﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 
@@ -26,3 +26,4 @@ import { CommonModule } from '@angular/common';
 export class DashboardComponent {
   protected authService = inject(AuthService);
 }
+
