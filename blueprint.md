@@ -15,7 +15,7 @@ El sistema habilita a usuarios autenticados para administrar companias de corret
 
 La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentro de src/app:
 
-- **core/**: servicios, modelos, interceptores, guards y definiciones de API reutilizables en todos los features.
+- **core/**: servicios, modelos, interceptores, guards, constantes y definiciones de API reutilizables en todos los features.
 - **features/**: casos de uso encapsulados por dominio funcional.
   - **admin/**: layout principal del panel, dashboard y submodulos de administracion.
     - admin-layout/: shell con toolbar y espacio para rutas hijas protegidas.
@@ -30,7 +30,7 @@ La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentr
 
 ## 3. Funcionalidades Actuales
 
-- **Login (/login)**: formulario reactivo con feedback de carga y manejo de errores.
+- **Login (/login)**: formulario reactivo con feedback de carga, manejo de errores y textos en español gestionados desde un archivo de constantes.
 - **Dashboard general (/dashboard)**: muestra saludo contextual y permite cerrar sesion.
 - **Panel administrativo (/admin)**:
   - Layout persistente con toolbar, logo y salida de rutas.
@@ -38,6 +38,7 @@ La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentr
   - Gestion de companias con lista filtrable, creacion/edicion via MatDialog, y cambio de estado con dialogo de confirmacion y snackbar.
 - **Redireccion Inteligente**: Un `HomeRedirectComponent` se encarga de redirigir a los usuarios a su dashboard correspondiente al recargar la pagina.
 - **Servicios base**: AuthService, CompaniaService, ThemeService, HTTP interceptor para adjuntar credenciales y endpoints centralizados.
+- **Gestión de Textos Centralizada**: Todos los textos de las funcionalidades de compañías y login se gestionan desde archivos de constantes para facilitar el mantenimiento y evitar errores de codificación.
 
 ## 4. Plan de Desarrollo
 
@@ -47,6 +48,8 @@ La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentr
 3. **Fase 3: Cambio de estado (soft delete)**.
 4. **Fase 4: Migracion a Angular Material**.
 5. **Fase 5: Reorganizacion por features/core/shared y adopcion de alias de paths**.
+6. **Fase 6: Centralización de Cadenas de Texto y Corrección de Codificación**: Se ha creado un archivo de constantes para manejar todos los textos relacionados con la gestión de compañías, solucionando problemas de codificación de caracteres y mejorando la mantenibilidad del código.
+7. **Fase 7: Traducción y Refactorización del Login**: Se ha traducido la pantalla de login al español y se ha refactorizado el componente para utilizar un archivo de constantes, siguiendo las mejores prácticas de internacionalización y mantenibilidad.
 
 ### Fase actual: Consolidacion de dominio y pruebas (pendiente)
 - [ ] Definir contratos de dominio (ports) para desacoplar CompaniaService de la infraestructura HTTP.

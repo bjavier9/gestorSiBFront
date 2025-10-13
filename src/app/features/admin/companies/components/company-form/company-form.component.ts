@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { CompaniaService } from '@core/services/compania.service';
 import { Compania } from '@core/models/compania.model';
+import { companiesTexts } from '@core/constants/companies.constants';
 
 @Component({
   selector: 'app-company-form',
@@ -32,13 +33,14 @@ import { Compania } from '@core/models/compania.model';
 export class CompanyFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<CompanyFormComponent>);
-  public data: { company: Compania | null } = inject(MAT_DIALOG_DATA);
+  public data: { company: Compania | null, title: string } = inject(MAT_DIALOG_DATA);
   private companiaService = inject(CompaniaService);
   private snackBar = inject(MatSnackBar);
 
   public companyForm!: FormGroup;
   public isEditMode = false;
   public isSaving = signal(false);
+  public texts = companiesTexts;
 
   ngOnInit(): void {
     this.isEditMode = !!this.data.company;
@@ -72,14 +74,14 @@ export class CompanyFormComponent implements OnInit {
     saveOperation.subscribe({
       next: (savedCompany) => {
         this.isSaving.set(false);
-        const message = this.isEditMode ? 'CompaÃ±Ã­a actualizada con Ã©xito' : 'CompaÃ±Ã­a creada con Ã©xito';
-        this.snackBar.open(message, 'Cerrar', { duration: 3000 });
+        const message = this.isEditMode ? this.texts.successfullyUpdated : this.texts.successfullyCreated;
+        this.snackBar.open(message, this.texts.cancel, { duration: 3000 });
         this.dialogRef.close(savedCompany);
       },
       error: (err) => {
-        console.error('Error al guardar la compaÃ±Ã­a:', err);
+        console.error('Error al guardar la compañía:', err);
         this.isSaving.set(false);
-        this.snackBar.open('Error al guardar la compaÃ±Ã­a', 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Error al guardar la compañía', this.texts.cancel, { duration: 3000 });
       }
     });
   }
@@ -88,4 +90,3 @@ export class CompanyFormComponent implements OnInit {
     this.dialogRef.close();
   }
 }
-

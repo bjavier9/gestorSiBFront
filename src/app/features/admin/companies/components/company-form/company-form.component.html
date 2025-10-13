@@ -1,5 +1,5 @@
 <form [formGroup]="companyForm" (ngSubmit)="onSave()">
-  <h2 mat-dialog-title>{{ isEditMode ? 'Actualizar Compañía' : 'Añadir Nueva Compañía' }}</h2>
+  <h2 mat-dialog-title>{{ data.title }}</h2>
   
   <mat-dialog-content class="form-container">
     <mat-form-field appearance="outline">
@@ -49,13 +49,13 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSaving()">Cancelar</button>
+    <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSaving()">{{ texts.cancel }}</button>
     <button mat-flat-button color="primary" type="submit" [disabled]="companyForm.invalid || isSaving()">
       @if (isSaving()) {
         <mat-spinner diameter="24" style="margin-right: 8px;"></mat-spinner>
         <span>Guardando...</span>
       } @else {
-        <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+        <span>{{ isEditMode ? texts.editCompany : texts.newCompany }}</span>
       }
     </button>
   </mat-dialog-actions>

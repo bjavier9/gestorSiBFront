@@ -4,12 +4,12 @@
       <button mat-icon-button routerLink="/admin/dashboard" aria-label="Volver al dashboard">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h1 class="mat-headline-5">Compañías de Corretaje</h1>
+      <h1 class="mat-headline-5">{{ texts.title }}</h1>
     </div>
     
     <div class="header-center">
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar por nombre o RIF</mat-label>
+        <mat-label>{{ texts.search }}</mat-label>
         <input matInput [formControl]="searchControl">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
@@ -18,7 +18,7 @@
     <div class="header-end">
        <button mat-fab extended color="primary" (click)="openForm()">
           <mat-icon>add</mat-icon>
-          Añadir Compañía
+          {{ texts.newCompany }}
         </button>
     </div>
   </div>
@@ -38,9 +38,9 @@
           <p><mat-icon>phone</mat-icon> {{ company.telefono }}</p>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-button (click)="openForm(company)">Actualizar</button>
+          <button mat-button (click)="openForm(company)">{{ texts.editCompany }}</button>
           <button mat-button [color]="company.activo ? 'warn' : 'primary'" (click)="toggleStatus(company)">
-            {{ company.activo ? 'Desactivar' : 'Activar' }}
+            {{ company.activo ? texts.delete : texts.restore }}
           </button>
         </mat-card-actions>
       </mat-card>

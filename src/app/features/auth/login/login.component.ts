@@ -9,6 +9,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { AuthService, LoginResult } from '@core/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { loginTexts } from '@core/constants/login.constants';
 
 @Component({
   selector: 'app-login',
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
   loading = signal(false);
   error = signal('');
   hidePassword = signal(true);
+  texts = loginTexts;
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -71,7 +73,7 @@ export class LoginComponent implements OnInit {
           }
         },
         error: (err: any) => {
-          this.error.set('Invalid credentials or connection error');
+          this.error.set(this.texts.invalidCredentials);
           this.loading.set(false);
           console.error(err);
         },
