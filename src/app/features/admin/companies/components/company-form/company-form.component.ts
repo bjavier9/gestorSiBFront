@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 import { CompaniaService } from '@core/services/compania.service';
 import { Compania } from '@core/models/compania.model';
@@ -26,7 +27,8 @@ import { companiesTexts } from '@core/constants/companies.constants';
     MatButtonModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,9 +43,11 @@ export class CompanyFormComponent implements OnInit {
   public isEditMode = false;
   public isSaving = signal(false);
   public texts = companiesTexts;
+  public imagePreview = signal<string | ArrayBuffer | null>('');
 
   ngOnInit(): void {
     this.isEditMode = !!this.data.company;
+    this.imagePreview.set(this.data.company?.foto || null);
 
     this.companyForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -51,11 +55,24 @@ export class CompanyFormComponent implements OnInit {
       direccion: ['', Validators.required],
       telefono: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      activo: [true]
+      activo: [true],
+      foto: [null]
     });
 
     if (this.isEditMode && this.data.company) {
       this.companyForm.patchValue(this.data.company);
+    }
+  }
+
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview.set(reader.result);
+        this.companyForm.patchValue({ foto: reader.result as string });
+      };
+      reader.readAsDataURL(file);
     }
   }
 

@@ -1,15 +1,44 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Espacio entre los campos del formulario */
-  padding-top: 20px; /* Espacio debajo del título */
+  gap: 12px; 
+  padding-top: 20px; 
 }
+
+.image-upload-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0;
+  transition: filter 0.3s ease;
+}
+
+.image-upload-container:hover .image-preview {
+  filter: brightness(0.8);
+}
+
+.upload-button {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
 
 mat-dialog-actions {
-  padding-top: 24px; /* Espacio encima de los botones */
+  padding-top: 24px; 
 }
 
-/* Ajustes para el spinner dentro del botón */
 button[mat-flat-button] span {
   display: flex;
   align-items: center;

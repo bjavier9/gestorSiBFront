@@ -40,7 +40,7 @@
         <mat-card-actions align="end">
           <button mat-button (click)="openForm(company)">{{ texts.editCompany }}</button>
           <button mat-button [color]="company.activo ? 'warn' : 'primary'" (click)="toggleStatus(company)">
-            {{ company.activo ? texts.delete : texts.restore }}
+            {{ company.activo ? texts.deactivate : texts.activate }}
           </button>
         </mat-card-actions>
       </mat-card>

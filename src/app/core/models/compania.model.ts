@@ -18,6 +18,7 @@ export interface Compania {
   monedasAceptadas: string[];
   monedaPorDefecto: string;
   modulos: string[];
+  foto?: string;
 }
 
 // Para la respuesta de la API que envuelve los datos

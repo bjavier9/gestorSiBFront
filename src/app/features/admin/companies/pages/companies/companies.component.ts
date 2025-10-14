@@ -81,25 +81,18 @@ export class CompaniesComponent implements OnInit {
       data: { company, title: company ? this.texts.editCompany : this.texts.newCompany }
     });
 
-    dialogRef.afterClosed().pipe(filter(result => !!result)).subscribe((result: Compania) => {
-      if (company) {
-        this.allCompanies.update(companies =>
-          companies.map(c => c.id === result.id ? result : c)
-        );
-        this.snackBar.open(this.texts.successfullyUpdated, this.texts.cancel, { duration: 3000 });
-      } else {
-        this.allCompanies.update(companies => [...companies, result]);
-        this.snackBar.open(this.texts.successfullyCreated, this.texts.cancel, { duration: 3000 });
-      }
+    dialogRef.afterClosed().pipe(filter(result => !!result)).subscribe(() => {
+      this.loadCompanies();
     });
   }
 
   toggleStatus(company: Compania): void {
-    const action = company.activo ? this.texts.delete : this.texts.restore;
+    const action = company.activo ? this.texts.deactivate : this.texts.activate;
+    const confirmationText = company.activo ? this.texts.deactivateConfirmation : this.texts.activateConfirmation;
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: `Confirmar ${action}`,
-        message: `¿Estás seguro de que deseas ${action.toLowerCase()} la compañía "${company.nombre}"?`
+        title: action,
+        message: confirmationText
       }
     });
 
@@ -112,7 +105,7 @@ export class CompaniesComponent implements OnInit {
               c.id === company.id ? { ...c, activo: newStatus } : c
             )
           );
-          const message = `Compañía ${company.nombre} ${newStatus ? this.texts.successfullyRestored : this.texts.successfullyDeleted}`;
+          const message = newStatus ? this.texts.successfullyActivated : this.texts.successfullyDeactivated;
           this.snackBar.open(message, this.texts.cancel, { duration: 3000 });
         },
         error: (err) => {
