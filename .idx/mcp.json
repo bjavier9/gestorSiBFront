@@ -2,26 +2,19 @@
   "mcpServers": {
     "angular-cli": {
       "command": "npx",
-      "args": ["-y", "@angular/cli@18.2.7", "mcp"],
-      "cwd": "./apps/frontend",
-      "transport": "stdio",
-      "trust": true
+      "args": [
+        "-y",
+        "@angular/cli",
+        "mcp"
+      ]
     },
     "firebase": {
       "command": "npx",
-      "args": ["-y", "firebase-tools@13.12.2", "mcp"],
-      "cwd": "./apps/firebase",
-      "transport": "stdio",
-      "env": {
-        "FIREBASE_PROJECT": "${env:FIREBASE_PROJECT}"
-      },
-      "trust": true
-    },
-    "filesystem": {
-      "command": "mcp-filesystem-server",
-      "args": ["./", "./apps/frontend", "./apps/firebase"],
-      "transport": "stdio",
-      "trust": true
+      "args": [
+        "-y",
+        "firebase-tools@latest",
+        "experimental:mcp"
+      ]
     }
   }
 }
