@@ -2,12 +2,15 @@
   <h2 mat-dialog-title>{{ data.title }}</h2>
   
   <mat-dialog-content class="form-container">
-    <div class="image-upload-container">
-      <input type="file" (change)="onFileChange($event)" #fileInput hidden>
-      <img [src]="imagePreview() || 'https://via.placeholder.com/150'" alt="Company Logo" class="image-preview" (click)="fileInput.click()">
-      <button mat-mini-fab color="primary" (click)="fileInput.click()" class="upload-button">
-        <mat-icon>edit</mat-icon>
-      </button>
+    <div class="image-section">
+      <div class="image-upload-container">
+        <input type="file" (change)="onFileChange($event)" #fileInput hidden>
+        <img [src]="imagePreview()" alt="Company Logo" class="image-preview" (click)="fileInput.click()">
+        <button mat-mini-fab color="primary" type="button" (click)="fileInput.click()" class="upload-button">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+      <button mat-stroked-button type="button" (click)="fileInput.click()" class="change-logo-button">Cambiar Logo</button>
     </div>
 
     <mat-form-field appearance="outline">

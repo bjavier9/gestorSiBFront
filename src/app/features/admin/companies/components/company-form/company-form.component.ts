@@ -47,7 +47,7 @@ export class CompanyFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.isEditMode = !!this.data.company;
-    this.imagePreview.set(this.data.company?.foto || null);
+    this.imagePreview.set(this.data.company?.logo || 'noimagen.svg');
 
     this.companyForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -56,7 +56,7 @@ export class CompanyFormComponent implements OnInit {
       telefono: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
       activo: [true],
-      foto: [null]
+      logo: [null]
     });
 
     if (this.isEditMode && this.data.company) {
@@ -70,7 +70,7 @@ export class CompanyFormComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview.set(reader.result);
-        this.companyForm.patchValue({ foto: reader.result as string });
+        this.companyForm.patchValue({ logo: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
