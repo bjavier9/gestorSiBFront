@@ -1,51 +1,104 @@
 .company-form {
-  max-width: 480px;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.company-form__header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.company-form__header p {
-  margin: 0.5rem 0 0;
-  color: #4b5563;
+  max-width: 560px;
+  display: block;
 }
 
 .company-form__body {
   display: grid;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
-.company-form__field {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.company-form__field span {
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.company-form__field input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-}
-
-button[type="submit"] {
-  justify-self: start;
-  padding: 0.5rem 1.25rem;
-  border-radius: 0.5rem;
-  border: none;
-  background-color: #1b4ad1;
-  color: #ffffff;
-  cursor: pointer;
+.company-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .company-form__message {
+  margin: 1rem 0 0;
+  color: var(--mat-sys-color-primary, #1e5cd9);
+}
+
+.company-form__state-card {
+  max-width: 420px;
+}
+
+.company-form__state-text {
   margin: 0;
-  color: #047857;
+  color: var(--mat-sys-color-on-surface-variant, #475569);
+}
+
+.company-form__state-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.company-form--skeleton {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.company-form__skeleton-fields {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.company-form__skeleton-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(148, 163, 184, 0.28);
+  border-radius: 0.75rem;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: company-form-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton--title {
+  width: 60%;
+  height: 24px;
+}
+
+.skeleton--subtitle {
+  width: 80%;
+  height: 16px;
+}
+
+.skeleton--field {
+  height: 56px;
+}
+
+.skeleton--button {
+  width: 140px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+@keyframes company-form-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }

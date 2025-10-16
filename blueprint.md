@@ -50,8 +50,8 @@ src/
 | --- | --- |
 | Authentication | `AuthService` stores session data in `localStorage`, exposes signals, and attaches bearer tokens via `authInterceptor`. |
 | Navigation | Guards enforce login and super admin access. `HomeRedirectComponent` routes users to `/admin/companies` or `/dashboard`. |
-| Admin Shell | `AdminShellComponent` renders the `logo.svg`, white toolbar, logout button, and nested routes. |
-| Companies | Simplified scaffolding for list, overview, create users, create offices, and edit details. Forms emit mock success messages until real APIs are wired. |
+| Admin Shell | `AdminShellComponent` is built with `mat-sidenav-container` + `mat-toolbar`, providing persistent navigation, primary actions, and logout following Material specs. |
+| Companies | List, overview, edit, user-create, and office-create pages use Angular Material cards, chips, form fields, and buttons. Each route ships with skeleton placeholders that mirror final layouts while data loads. Forms still emit mock success messages until real APIs are wired. |
 | Models | `Company` is the canonical shape. Mapping from API responses happens in `CompanyService`. |
 
 ---
@@ -64,8 +64,10 @@ src/
 4. **OnPush + async pipe** – mandatory for all components.
 5. **Signals where sensible** – prefer signals for local UI state, observables for async flows.
 6. **No `any`** – strict typing, explicit interfaces, no implicit `any`.
-7. **Lightweight styling** – stick to small CSS files; avoid large global styles.
-8. **Separation of concerns** – HTTP logic stays in services; components orchestrate UI only.
+7. **Material-first UI** – prefer Angular Material components and design tokens; use custom CSS only to compose layout or refine spacing/color within the Material system.
+8. **Skeleton-friendly loading** – long-running async views expose skeleton placeholders that match the final layout footprint while data resolves.
+9. **Lightweight styling** – stick to small CSS files; avoid large global styles.
+10. **Separation of concerns** – HTTP logic stays in services; components orchestrate UI only.
 
 ### 4.1 Clean Code Standards
 
@@ -89,6 +91,7 @@ src/
 4. Use `inject(...)` instead of constructor injection.
 5. Expose public readonly properties; never mutate inputs.
 6. Use `trackBy` on `*ngFor` lists and `async` pipe for observables.
+7. Provide skeleton loaders (`Array.from({ length: n })` helpers + shimmering CSS) for noticeable loading states; keep skeleton markup lightweight and colocated with the component.
 
 ### 5.2 Service
 1. Place under `core/services`.
@@ -143,7 +146,7 @@ src/
 
 - Replace mock messages in admin forms with real API calls once backend contracts are defined.
 - Introduce unit tests for `AuthService`, `CompanyService`, and critical admin pages.
-- Provide loading/error states in admin pages beyond basic messaging.
+- Add a responsive sidenav toggle in the admin shell for handset breakpoints.
 - Evaluate reintroducing a shared UI/token module if multiple features demand it.
 
 ---

@@ -1,30 +1,38 @@
-<section class="company-form">
-  <header class="company-form__header">
-    <h1>Create office</h1>
-    <p>Register a new office for this company.</p>
-    <a [routerLink]="['/admin/companies', companyId]">Back to company overview</a>
-  </header>
+<mat-card class="company-form mat-elevation-z1">
+  <mat-card-header>
+    <mat-card-title>Create office</mat-card-title>
+    <mat-card-subtitle>Register a new office for this company.</mat-card-subtitle>
+  </mat-card-header>
 
-  <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
-    <label class="company-form__field">
-      <span>Office name</span>
-      <input type="text" formControlName="name" />
-    </label>
+  <mat-card-content>
+    <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Office name</mat-label>
+        <input matInput type="text" formControlName="name" autocomplete="organization" />
+      </mat-form-field>
 
-    <label class="company-form__field">
-      <span>City</span>
-      <input type="text" formControlName="city" />
-    </label>
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input matInput type="text" formControlName="city" autocomplete="address-level2" />
+      </mat-form-field>
 
-    <label class="company-form__field">
-      <span>Phone</span>
-      <input type="tel" formControlName="phone" />
-    </label>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput type="tel" formControlName="phone" autocomplete="tel" />
+      </mat-form-field>
 
-    <button type="submit">Create office</button>
-  </form>
+      <div class="company-form__actions">
+        <a mat-stroked-button color="primary" [routerLink]="['/admin/companies', companyId]">
+          Back to company overview
+        </a>
+        <button mat-flat-button color="primary" type="submit">
+          Create office
+        </button>
+      </div>
+    </form>
 
-  <p *ngIf="message()" class="company-form__message">
-    {{ message() }}
-  </p>
-</section>
+    <p *ngIf="message()" class="company-form__message mat-body-medium">
+      {{ message() }}
+    </p>
+  </mat-card-content>
+</mat-card>

@@ -1,38 +1,91 @@
 <ng-container *ngIf="company$ | async as company; else loading">
   <ng-container *ngIf="company; else notFound">
-    <section class="company-overview">
-      <header class="company-overview__header">
-        <h1 class="company-overview__title">{{ company.name }}</h1>
-        <p class="company-overview__subtitle">
-          Registered with tax id {{ company.taxId }}
-        </p>
-      </header>
+    <mat-card class="company-overview mat-elevation-z1">
+      <mat-card-header>
+        <div mat-card-avatar class="company-overview__avatar">
+          <mat-icon aria-hidden="true">apartment</mat-icon>
+        </div>
+        <mat-card-title>{{ company.name }}</mat-card-title>
+        <mat-card-subtitle>Registered with tax id {{ company.taxId }}</mat-card-subtitle>
+      </mat-card-header>
 
-      <dl class="company-overview__details">
-        <dt>Status</dt>
-        <dd>{{ company.isActive ? 'Active' : 'Inactive' }}</dd>
-        <dt>Email</dt>
-        <dd>{{ company.email }}</dd>
-        <dt>Phone</dt>
-        <dd>{{ company.phone }}</dd>
-        <dt>Default currency</dt>
-        <dd>{{ company.defaultCurrency || 'Not defined' }}</dd>
-      </dl>
+      <mat-card-content class="company-overview__content">
+        <mat-chip-set class="company-overview__status">
+        <mat-chip [color]="company.isActive ? 'primary' : 'warn'" disableRipple>
+            {{ company.isActive ? 'Active' : 'Inactive' }}
+          </mat-chip>
+        </mat-chip-set>
 
-      <nav class="company-overview__actions">
-        <a [routerLink]="['/admin/companies', company.id, 'users']">Create user</a>
-        <a [routerLink]="['/admin/companies', company.id, 'offices']">Create office</a>
-        <a [routerLink]="['/admin/companies', company.id, 'edit']">Edit company</a>
-      </nav>
-    </section>
+        <mat-divider></mat-divider>
+
+        <mat-list>
+          <mat-list-item>
+            <div matLine class="company-overview__label">Email</div>
+            <div matLine>{{ company.email }}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <div matLine class="company-overview__label">Phone</div>
+            <div matLine>{{ company.phone }}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <div matLine class="company-overview__label">Default currency</div>
+            <div matLine>{{ company.defaultCurrency || 'Not defined' }}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+
+      <mat-card-actions class="company-overview__actions">
+        <a
+          mat-stroked-button
+          color="primary"
+          [routerLink]="['/admin/companies', company.id, 'users']"
+        >
+          Create user
+        </a>
+        <a
+          mat-stroked-button
+          color="primary"
+          [routerLink]="['/admin/companies', company.id, 'offices']"
+        >
+          Create office
+        </a>
+        <a mat-flat-button color="primary" [routerLink]="['/admin/companies', company.id, 'edit']">
+          Edit company
+        </a>
+      </mat-card-actions>
+    </mat-card>
   </ng-container>
 </ng-container>
 
 <ng-template #loading>
-  <p class="company-overview__message">Loading company...</p>
+  <mat-card class="company-overview company-overview--skeleton mat-elevation-z1">
+    <div class="company-overview__skeleton-header">
+      <div class="skeleton skeleton--avatar"></div>
+      <div class="company-overview__skeleton-lines">
+        <div class="skeleton skeleton--line skeleton--line-lg"></div>
+        <div class="skeleton skeleton--line"></div>
+      </div>
+    </div>
+    <div class="company-overview__skeleton-status">
+      <div class="skeleton skeleton--chip"></div>
+    </div>
+    <div class="skeleton skeleton--divider"></div>
+    <div class="company-overview__skeleton-list">
+      <div class="skeleton skeleton--line" *ngFor="let _ of skeletonRows"></div>
+    </div>
+    <div class="company-overview__skeleton-actions">
+      <div class="skeleton skeleton--button" *ngFor="let _ of skeletonActions"></div>
+    </div>
+  </mat-card>
 </ng-template>
 
 <ng-template #notFound>
-  <p class="company-overview__message">Company not found.</p>
-  <a routerLink="/admin/companies">Back to companies</a>
+  <mat-card class="company-overview__state-card mat-elevation-z0">
+    <mat-card-content>
+      <p class="company-overview__state-text">Company not found.</p>
+    </mat-card-content>
+    <mat-card-actions class="company-overview__state-actions">
+      <a mat-stroked-button color="primary" routerLink="/admin/companies">Back to companies</a>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>

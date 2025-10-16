@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { tap } from 'rxjs/operators';
 
 import { CompanyService } from '@core/services/company.service';
@@ -9,7 +13,17 @@ import { CompanyService } from '@core/services/company.service';
 @Component({
   selector: 'app-company-edit-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, AsyncPipe, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    AsyncPipe,
+    RouterLink,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   templateUrl: './company-edit-page.component.html',
   styleUrls: ['./company-edit-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +43,8 @@ export class CompanyEditPageComponent {
   });
 
   readonly message = signal('');
+  readonly skeletonFields = Array.from({ length: 5 });
+  readonly skeletonActions = Array.from({ length: 2 });
 
   readonly company$ = this.companyService
     .getCompanyById(this.companyId)

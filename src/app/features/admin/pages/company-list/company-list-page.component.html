@@ -1,42 +1,78 @@
 <section class="company-list">
   <header class="company-list__header">
-    <h1 class="company-list__title">Brokerage companies</h1>
-    <p class="company-list__subtitle">
+    <h1 class="company-list__title mat-headline-medium">Brokerage companies</h1>
+    <p class="company-list__subtitle mat-body-medium">
       Select a company to manage users, offices, or its profile.
     </p>
   </header>
 
   <ng-container *ngIf="companies$ | async as companies; else loading">
-    <p class="company-list__empty" *ngIf="!companies.length">
-      No companies available yet.
-    </p>
+    <mat-card *ngIf="!companies.length" class="company-list__state-card mat-elevation-z0">
+      <mat-card-content>
+        <p class="company-list__state-text">No companies available yet.</p>
+      </mat-card-content>
+    </mat-card>
 
-    <ul class="company-list__items" *ngIf="companies.length">
-      <li class="company-list__item" *ngFor="let company of companies; trackBy: trackById">
-        <article class="company-card">
-          <header class="company-card__header">
-            <h2 class="company-card__name">{{ company.name }}</h2>
-            <span class="company-card__status" [class.company-card__status--active]="company.isActive">
+    <div class="company-list__grid" *ngIf="companies.length">
+      <mat-card class="company-card mat-elevation-z1" *ngFor="let company of companies; trackBy: trackById">
+        <mat-card-header>
+          <div mat-card-avatar class="company-card__avatar">
+            <mat-icon aria-hidden="true">apartment</mat-icon>
+          </div>
+          <mat-card-title>{{ company.name }}</mat-card-title>
+          <mat-card-subtitle>Tax id {{ company.taxId }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content class="company-card__content">
+          <mat-chip-set class="company-card__chip-set">
+            <mat-chip [color]="company.isActive ? 'primary' : 'warn'" disableRipple>
               {{ company.isActive ? 'Active' : 'Inactive' }}
-            </span>
-          </header>
-          <dl class="company-card__details">
-            <dt>Tax id</dt>
-            <dd>{{ company.taxId }}</dd>
-            <dt>Email</dt>
-            <dd>{{ company.email }}</dd>
-            <dt>Phone</dt>
-            <dd>{{ company.phone }}</dd>
-          </dl>
-          <a [routerLink]="['/admin/companies', company.id]" class="company-card__link">
+            </mat-chip>
+          </mat-chip-set>
+
+          <mat-list>
+            <mat-list-item>
+              <div matLine class="company-card__detail-label">Email</div>
+              <div matLine>{{ company.email }}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <div matLine class="company-card__detail-label">Phone</div>
+              <div matLine>{{ company.phone }}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <a mat-stroked-button color="primary" [routerLink]="['/admin/companies', company.id]">
             Open company
           </a>
-        </article>
-      </li>
-    </ul>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </ng-container>
 </section>
 
 <ng-template #loading>
-  <p class="company-list__loading">Loading companies...</p>
+  <div class="company-list__skeleton-grid">
+    <mat-card
+      class="company-card company-card--skeleton mat-elevation-z1"
+      *ngFor="let _ of skeletonItems"
+    >
+      <div class="company-card__skeleton-header">
+        <div class="skeleton skeleton--avatar"></div>
+        <div class="company-card__skeleton-lines">
+          <div class="skeleton skeleton--line skeleton--line-lg"></div>
+          <div class="skeleton skeleton--line"></div>
+        </div>
+      </div>
+      <div class="company-card__skeleton-body">
+        <div class="skeleton skeleton--chip"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton skeleton--line"></div>
+      </div>
+      <div class="skeleton skeleton--button"></div>
+    </mat-card>
+  </div>
 </ng-template>

@@ -1,40 +1,62 @@
 .admin-shell {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
-  background-color: #f8f9fb;
+  height: 100vh;
+  background-color: var(--mat-app-background-color, #f4f6fb);
 }
 
-.admin-shell__sidebar {
-  padding: 2rem 1.5rem;
-  border-right: 1px solid #e1e5ee;
-  background-color: #ffffff;
+.admin-shell__sidenav {
+  width: 264px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--mat-sys-color-surface, #ffffff);
+  box-shadow: inset -1px 0 0 rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
 }
 
 .admin-shell__brand {
-  margin: 0 0 2rem;
-  font-size: 1.25rem;
-}
-
-.admin-shell__nav {
-  display: grid;
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
-}
-
-.admin-shell__nav a {
-  text-decoration: none;
-  color: #1f2937;
-}
-
-.admin-shell__link--active {
+  font-size: 1.125rem;
   font-weight: 600;
-  color: #1b4ad1;
+  color: var(--mat-sys-color-on-surface, #1f2937);
+}
+
+.admin-shell__brand mat-icon {
+  font-size: 1.75rem;
+}
+
+.admin-shell__nav-item {
+  border-radius: 0.75rem;
+  color: var(--mat-sys-color-on-surface, #1f2937);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.admin-shell__nav-item mat-icon {
+  color: inherit;
+}
+
+.admin-shell__nav-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.admin-shell__nav-item:hover {
+  background-color: rgba(30, 92, 217, 0.08);
+}
+
+.admin-shell__nav-item--active {
+  color: var(--mat-sys-color-primary, #1e5cd9);
+  background-color: rgba(30, 92, 217, 0.16);
+  font-weight: 600;
 }
 
 .admin-shell__content {
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fb;
+  min-height: 100vh;
+  background-color: var(--mat-app-background-color, #f4f6fb);
 }
 
 .admin-shell__toolbar {
@@ -43,9 +65,8 @@
   gap: 0.75rem;
   padding: 0 2rem;
   min-height: 64px;
-  background-color: #ffffff;
-  color: #1f2937;
-  border-bottom: 1px solid #e1e5ee;
+  background-color: var(--mat-sys-color-surface, #ffffff);
+  color: var(--mat-sys-color-on-surface, #1f2937);
 }
 
 .admin-shell__logo {
@@ -55,7 +76,7 @@
 
 .admin-shell__title {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .admin-shell__spacer {
@@ -63,6 +84,7 @@
 }
 
 .admin-shell__page {
-  padding: 2rem;
   flex: 1 1 auto;
+  padding: 2rem;
+  background-color: var(--mat-app-background-color, #f4f6fb);
 }

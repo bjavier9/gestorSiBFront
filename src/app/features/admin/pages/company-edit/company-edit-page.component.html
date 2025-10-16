@@ -1,53 +1,78 @@
 <ng-container *ngIf="company$ | async as company; else loading">
   <ng-container *ngIf="company; else notFound">
-    <section class="company-form">
-      <header class="company-form__header">
-        <h1>Edit company</h1>
-        <p>Update the main information for {{ company.name }}.</p>
-        <a [routerLink]="['/admin/companies', company.id]">Back to company overview</a>
-      </header>
+    <mat-card class="company-form mat-elevation-z1">
+      <mat-card-header>
+        <mat-card-title>Edit company</mat-card-title>
+        <mat-card-subtitle>
+          Update the main information for {{ company.name }}.
+        </mat-card-subtitle>
+      </mat-card-header>
 
-      <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
-        <label class="company-form__field">
-          <span>Name</span>
-          <input type="text" formControlName="name" />
-        </label>
+      <mat-card-content>
+        <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" autocomplete="organization" />
+          </mat-form-field>
 
-        <label class="company-form__field">
-          <span>Tax id</span>
-          <input type="text" formControlName="taxId" />
-        </label>
+          <mat-form-field appearance="outline">
+            <mat-label>Tax id</mat-label>
+            <input matInput type="text" formControlName="taxId" autocomplete="off" />
+          </mat-form-field>
 
-        <label class="company-form__field">
-          <span>Email</span>
-          <input type="email" formControlName="email" />
-        </label>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" />
+          </mat-form-field>
 
-        <label class="company-form__field">
-          <span>Phone</span>
-          <input type="tel" formControlName="phone" />
-        </label>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <input matInput type="tel" formControlName="phone" autocomplete="tel" />
+          </mat-form-field>
 
-        <label class="company-form__field">
-          <span>Address</span>
-          <input type="text" formControlName="address" />
-        </label>
+          <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <input matInput type="text" formControlName="address" autocomplete="street-address" />
+          </mat-form-field>
 
-        <button type="submit">Save changes</button>
-      </form>
+          <div class="company-form__actions">
+            <a mat-stroked-button color="primary" [routerLink]="['/admin/companies', company.id]">
+              Back to company overview
+            </a>
+            <button mat-flat-button color="primary" type="submit">
+              Save changes
+            </button>
+          </div>
+        </form>
 
-      <p *ngIf="message()" class="company-form__message">{{ message() }}</p>
-    </section>
+        <p *ngIf="message()" class="company-form__message mat-body-medium">
+          {{ message() }}
+        </p>
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </ng-container>
 
 <ng-template #loading>
-  <p class="company-form__message">Loading company...</p>
+  <mat-card class="company-form company-form--skeleton mat-elevation-z1">
+    <div class="skeleton skeleton--title"></div>
+    <div class="skeleton skeleton--subtitle"></div>
+    <div class="company-form__skeleton-fields">
+      <div class="skeleton skeleton--field" *ngFor="let _ of skeletonFields"></div>
+    </div>
+    <div class="company-form__skeleton-actions">
+      <div class="skeleton skeleton--button" *ngFor="let _ of skeletonActions"></div>
+    </div>
+  </mat-card>
 </ng-template>
 
 <ng-template #notFound>
-  <section class="company-form">
-    <p class="company-form__message">Company not found.</p>
-    <a routerLink="/admin/companies">Back to companies</a>
-  </section>
+  <mat-card class="company-form__state-card mat-elevation-z0">
+    <mat-card-content>
+      <p class="company-form__state-text">Company not found.</p>
+    </mat-card-content>
+    <mat-card-actions class="company-form__state-actions">
+      <a mat-stroked-button color="primary" routerLink="/admin/companies">Back to companies</a>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>
