@@ -1,0 +1,53 @@
+.company-overview {
+  display: grid;
+  gap: 1.5rem;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e1e5ee;
+}
+
+.company-overview__title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.company-overview__subtitle {
+  margin: 0.25rem 0 0;
+  color: #4b5563;
+}
+
+.company-overview__details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+}
+
+.company-overview__details dt {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.company-overview__details dd {
+  margin: 0;
+  color: #4b5563;
+}
+
+.company-overview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.company-overview__actions a {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  background-color: #1b4ad1;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.company-overview__message {
+  color: #6b7280;
+}

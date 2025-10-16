@@ -1,0 +1,38 @@
+<ng-container *ngIf="company$ | async as company; else loading">
+  <ng-container *ngIf="company; else notFound">
+    <section class="company-overview">
+      <header class="company-overview__header">
+        <h1 class="company-overview__title">{{ company.name }}</h1>
+        <p class="company-overview__subtitle">
+          Registered with tax id {{ company.taxId }}
+        </p>
+      </header>
+
+      <dl class="company-overview__details">
+        <dt>Status</dt>
+        <dd>{{ company.isActive ? 'Active' : 'Inactive' }}</dd>
+        <dt>Email</dt>
+        <dd>{{ company.email }}</dd>
+        <dt>Phone</dt>
+        <dd>{{ company.phone }}</dd>
+        <dt>Default currency</dt>
+        <dd>{{ company.defaultCurrency || 'Not defined' }}</dd>
+      </dl>
+
+      <nav class="company-overview__actions">
+        <a [routerLink]="['/admin/companies', company.id, 'users']">Create user</a>
+        <a [routerLink]="['/admin/companies', company.id, 'offices']">Create office</a>
+        <a [routerLink]="['/admin/companies', company.id, 'edit']">Edit company</a>
+      </nav>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <p class="company-overview__message">Loading company...</p>
+</ng-template>
+
+<ng-template #notFound>
+  <p class="company-overview__message">Company not found.</p>
+  <a routerLink="/admin/companies">Back to companies</a>
+</ng-template>

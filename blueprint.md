@@ -1,57 +1,158 @@
-# Vision General del Proyecto: SIB - Sistema de Intermediacion de Seguros
+# SIB Frontend Blueprint
 
-Este documento resume la arquitectura, funcionalidades y el plan de desarrollo de SIB, una aplicacion web construida con Angular enfocada en la gestion de intermediarios de seguros.
+This blueprint documents how the brokerage management frontend is structured after the latest refactor. Follow it to keep the codebase simple, consistent, and easy to extend.
 
-## 1. Proposito y Capacidades
+---
 
-El sistema habilita a usuarios autenticados para administrar companias de corretaje de forma eficiente:
+## 1. Product Snapshot
 
-- **Gestion completa de companias (CRUD)**: creacion, edicion, activacion/inactivacion y consulta de registros.
-- **Autenticacion diferenciada**: flujo de inicio de sesion con redireccion a dashboard publico o panel administrativo.
-- **Interfaz moderna**: componentes standalone, Signals y Angular Material para mantener una UI consistente y reactiva.
-- **Temas dinamicos**: interruptor de tema centralizado en ThemeService consumido por componentes compartidos.
+- **Goal**: Super administrators manage brokerage companies, their users, and offices from a focused admin area. Regular users access a lightweight dashboard.
+- **Tech Stack**: Angular 17+ with standalone components, Angular Material, strict TypeScript, RxJS signals and observables.
+- **Entry Points**:
+  - `/login` – authentication form with mock backend.
+  - `/dashboard` – general user landing page.
+  - `/admin/...` – super admin shell with company-centric navigation.
 
-## 2. Arquitectura Base
+---
 
-La aplicacion adopta una estructura por capas inspirada en DDD, organizada dentro de src/app:
+## 2. High-Level Architecture
 
-- **core/**: servicios, modelos, interceptores, guards, constantes y definiciones de API reutilizables en todos los features.
-- **features/**: casos de uso encapsulados por dominio funcional.
-  - **admin/**: layout principal del panel, dashboard y submodulos de administracion.
-    - admin-layout/: shell con toolbar y espacio para rutas hijas protegidas.
-    - companies/: incluye paginas (pages/companies) y componentes especificos (components/company-form).
-    - dashboard/: tarjetas de navegacion y accesos rapidos para tareas administrativas.
-  - **auth/**: componentes de autenticacion como el formulario de login.
-  - **dashboard/**: dashboard general para usuarios no administradores.
-  - **home/**: contiene el `HomeRedirectComponent` para redirigir a los usuarios a su dashboard correspondiente.
-- **shared/**: componentes reutilizables (por ejemplo, theme-toggle, confirmation-dialog) desacoplados de dominios especificos.
-- **Alias de paths (@core, @shared, @features)** definidos en tsconfig.json y tsconfig.app.json para mantener imports legibles tras la reorganizacion.
-- **Enrutamiento**: app.routes.ts carga lazy cada feature y aplica guards (authGuard, adminGuard) desde @core.
+```
+src/
+└── app/
+    ├── app.component.{ts,html,css}  # root shell (routes only)
+    ├── app.config.ts                # global providers, router, http interceptor
+    ├── app.routes.ts                # route map
+    ├── core/                        # cross-cutting elements
+    │   ├── api/                     # endpoint builders
+    │   ├── guards/                  # route guards
+    │   ├── interceptors/            # http interceptors
+    │   ├── models/                  # domain models
+    │   └── services/                # application services
+    └── features/                    # vertical slices
+        ├── admin/                   # super admin area
+        │   ├── layout/              # admin shell
+        │   └── pages/               # company list/overview/edit/users/offices
+        ├── auth/                    # login component
+        ├── dashboard/               # user dashboard
+        └── home/                    # redirect to appropriate area
+```
 
-## 3. Funcionalidades Actuales
+- **No shared folder**: after simplification, only feature-specific components remain. Re-introduce shared modules only when multiple features require them.
+- **Path aliases**: `@core/*` → `src/app/core`, `@features/*` → `src/app/features`.
+- **Styling**: local component styles in CSS (no SCSS) to keep dependencies minimal.
 
-- **Login (/login)**: formulario reactivo con feedback de carga, manejo de errores y textos en español gestionados desde un archivo de constantes.
-- **Dashboard general (/dashboard)**: muestra saludo contextual y permite cerrar sesion.
-- **Panel administrativo (/admin)**:
-  - Layout persistente con toolbar, logo y salida de rutas.
-  - Dashboard de administracion con accesos rapidos.
-  - Gestion de companias con lista filtrable, creacion/edicion via MatDialog, y cambio de estado con dialogo de confirmacion y snackbar.
-- **Redireccion Inteligente**: Un `HomeRedirectComponent` se encarga de redirigir a los usuarios a su dashboard correspondiente al recargar la pagina.
-- **Servicios base**: AuthService, CompaniaService, ThemeService, HTTP interceptor para adjuntar credenciales y endpoints centralizados.
-- **Gestión de Textos Centralizada**: Todos los textos de las funcionalidades de compañías y login se gestionan desde archivos de constantes para facilitar el mantenimiento y evitar errores de codificación.
+---
 
-## 4. Plan de Desarrollo
+## 3. Current Functional Baseline
 
-### Fases anteriores (completadas)
-1. **Fase 1: Estructura inicial y visualizacion**.
-2. **Fase 2: Formulario de companias**.
-3. **Fase 3: Cambio de estado (soft delete)**.
-4. **Fase 4: Migracion a Angular Material**.
-5. **Fase 5: Reorganizacion por features/core/shared y adopcion de alias de paths**.
-6. **Fase 6: Centralización de Cadenas de Texto y Corrección de Codificación**: Se ha creado un archivo de constantes para manejar todos los textos relacionados con la gestión de compañías, solucionando problemas de codificación de caracteres y mejorando la mantenibilidad del código.
-7. **Fase 7: Traducción y Refactorización del Login**: Se ha traducido la pantalla de login al español y se ha refactorizado el componente para utilizar un archivo de constantes, siguiendo las mejores prácticas de internacionalización y mantenibilidad.
+| Area | Description |
+| --- | --- |
+| Authentication | `AuthService` stores session data in `localStorage`, exposes signals, and attaches bearer tokens via `authInterceptor`. |
+| Navigation | Guards enforce login and super admin access. `HomeRedirectComponent` routes users to `/admin/companies` or `/dashboard`. |
+| Admin Shell | `AdminShellComponent` renders the `logo.svg`, white toolbar, logout button, and nested routes. |
+| Companies | Simplified scaffolding for list, overview, create users, create offices, and edit details. Forms emit mock success messages until real APIs are wired. |
+| Models | `Company` is the canonical shape. Mapping from API responses happens in `CompanyService`. |
 
-### Fase actual: Consolidacion de dominio y pruebas (pendiente)
-- [ ] Definir contratos de dominio (ports) para desacoplar CompaniaService de la infraestructura HTTP.
-- [ ] Documentar casos de uso y flujos clave en core (auth y companias).
-- [ ] Incorporar pruebas unitarias relevantes para componentes criticos (companies, company-form, guards).
+---
+
+## 4. Development Principles
+
+1. **Plain English everywhere** – identifiers, comments, and UI strings use ASCII English.
+2. **Single responsibility** – each file does one thing (component, service, guard, etc.).
+3. **Immutable data** – treat models as readonly; avoid in-place mutation.
+4. **OnPush + async pipe** – mandatory for all components.
+5. **Signals where sensible** – prefer signals for local UI state, observables for async flows.
+6. **No `any`** – strict typing, explicit interfaces, no implicit `any`.
+7. **Lightweight styling** – stick to small CSS files; avoid large global styles.
+8. **Separation of concerns** – HTTP logic stays in services; components orchestrate UI only.
+
+### 4.1 Clean Code Standards
+
+- **File naming**: lower-kebab-case (e.g., `company-list-page.component.ts`, `auth.service.ts`).
+- **Class/interface naming**: PascalCase (`CompanyService`, `LoginResult`, `Company`).
+- **Functions, variables, signals**: camelCase (`loadCompanies`, `companyId`, `isSubmitting`); observables end with `$`.
+- **Folder naming**: lower-kebab-case aligned with feature or concern (`company-overview`, `layout`).
+- **Constants**: UPPER_SNAKE_CASE and co-locate near usage when possible.
+- **Commit separation**: group meaningful changes per feature to keep history readable.
+- **Comments**: add only when intent is not obvious from naming; avoid restating code.
+- **Imports**: order as Angular, third-party, internal; remove unused imports during development.
+
+---
+
+## 5. Implementation Recipes
+
+### 5.1 Component (page or sub-component)
+1. Create `<name>.component.ts` with `standalone: true`, `changeDetection: OnPush`.
+2. Import required Angular Material modules explicitly.
+3. Keep templates in a separate `.html` file and styles in `.css`.
+4. Use `inject(...)` instead of constructor injection.
+5. Expose public readonly properties; never mutate inputs.
+6. Use `trackBy` on `*ngFor` lists and `async` pipe for observables.
+
+### 5.2 Service
+1. Place under `core/services`.
+2. Decorate with `@Injectable({ providedIn: 'root' })`.
+3. Inject dependencies using `inject()`.
+4. Expose public methods returning observables or signals; no side effects in constructors.
+5. When calling HTTP endpoints, centralise mapping logic (e.g., `mapCompanyFromApi`).
+
+### 5.3 Guard
+1. Create a function guard in `core/guards`.
+2. Use `inject()` to access services.
+3. Return boolean or `UrlTree`. Avoid side effects; rely on returning redirect trees.
+
+### 5.4 HTTP Interceptor
+1. Store under `core/interceptors`.
+2. Use `HttpInterceptorFn`.
+3. Keep logic minimal: guard conditions, clone requests, forward to `next()`.
+
+### 5.5 API Endpoints
+1. Export plain objects/functions from `core/api`.
+2. Build URLs using `environment.apiHost`.
+3. Avoid direct string concatenation inside services; call endpoint helpers instead.
+
+### 5.6 Models
+1. Define interfaces under `core/models`.
+2. Use strict property names reflecting final domain shape (`Company`, `CompanyFromApi`).
+3. Export DTO wrappers (`CompanyApiResponse`) when the API nests data.
+
+### 5.7 Routes
+1. Declare all routes in `app.routes.ts`.
+2. Use `loadComponent` for lazily-loaded standalone components.
+3. Nest admin routes under `'admin'` with `AdminShellComponent` as the host.
+
+### 5.8 Adding a New Feature Slice
+1. Create `src/app/features/<feature-name>/`.
+2. Add a `pages/` folder for route-level components.
+3. Bridge to `core` services or introduce new services when cross-feature reuse is needed.
+4. Register routes under the appropriate parent path in `app.routes.ts`.
+
+---
+
+## 6. Workflow Guide
+
+1. **Create/modify files** following the recipes above.
+2. **Keep imports tidy**; rely on path aliases.
+3. **Lint/build locally** with `npm run build`. Add tests when logic becomes non-trivial.
+4. **Update this blueprint** whenever architectural decisions change.
+
+---
+
+## 7. Pending Enhancements
+
+- Replace mock messages in admin forms with real API calls once backend contracts are defined.
+- Introduce unit tests for `AuthService`, `CompanyService`, and critical admin pages.
+- Provide loading/error states in admin pages beyond basic messaging.
+- Evaluate reintroducing a shared UI/token module if multiple features demand it.
+
+---
+
+## 8. Quick Reference Commands
+
+- `npm install` – install dependencies.
+- `npm run start` – development server.
+- `npm run build` – production build (strict type checking).
+- `npm run test` – unit tests (once configured).
+
+Stay disciplined with these guidelines to keep the SIB frontend lean, readable, and ready for production APIs.***

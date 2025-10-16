@@ -1,0 +1,42 @@
+<section class="company-list">
+  <header class="company-list__header">
+    <h1 class="company-list__title">Brokerage companies</h1>
+    <p class="company-list__subtitle">
+      Select a company to manage users, offices, or its profile.
+    </p>
+  </header>
+
+  <ng-container *ngIf="companies$ | async as companies; else loading">
+    <p class="company-list__empty" *ngIf="!companies.length">
+      No companies available yet.
+    </p>
+
+    <ul class="company-list__items" *ngIf="companies.length">
+      <li class="company-list__item" *ngFor="let company of companies; trackBy: trackById">
+        <article class="company-card">
+          <header class="company-card__header">
+            <h2 class="company-card__name">{{ company.name }}</h2>
+            <span class="company-card__status" [class.company-card__status--active]="company.isActive">
+              {{ company.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </header>
+          <dl class="company-card__details">
+            <dt>Tax id</dt>
+            <dd>{{ company.taxId }}</dd>
+            <dt>Email</dt>
+            <dd>{{ company.email }}</dd>
+            <dt>Phone</dt>
+            <dd>{{ company.phone }}</dd>
+          </dl>
+          <a [routerLink]="['/admin/companies', company.id]" class="company-card__link">
+            Open company
+          </a>
+        </article>
+      </li>
+    </ul>
+  </ng-container>
+</section>
+
+<ng-template #loading>
+  <p class="company-list__loading">Loading companies...</p>
+</ng-template>

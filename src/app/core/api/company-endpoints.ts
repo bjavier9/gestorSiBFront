@@ -3,18 +3,18 @@ import { environment } from '../../../environments/environment';
 const baseUrl = `${environment.apiHost}/api/companias`;
 
 export const companyEndpoints = {
-  // GET /api/companias
+  // Retrieves every company
   getAll: `${baseUrl}`,
 
-  // POST /api/companias
+  // Creates a company
   create: `${baseUrl}`,
 
-  // PUT /api/companias/:id
+  // Updates a company by id
   update: (id: string) => `${baseUrl}/${id}`,
 
-  // PUT /api/companias/:id/activar
+  // Activates a company by id
   activate: (id: string) => `${baseUrl}/${id}/activar`,
 
-  // PUT /api/companias/:id/desactivar
+  // Deactivates a company by id
   deactivate: (id: string) => `${baseUrl}/${id}/desactivar`,
 };

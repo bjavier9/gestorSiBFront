@@ -1,0 +1,91 @@
+.company-list__header {
+  margin-bottom: 1.5rem;
+}
+
+.company-list__title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.company-list__subtitle {
+  margin: 0.25rem 0 0;
+  color: #4b5563;
+}
+
+.company-list__items {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.company-list__item {
+  margin: 0;
+}
+
+.company-card {
+  padding: 1.25rem;
+  border: 1px solid #e1e5ee;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.company-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.company-card__name {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.company-card__status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.company-card__status--active {
+  background-color: #e0f2f1;
+  color: #047857;
+}
+
+.company-card__details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+}
+
+.company-card__details dt {
+  font-weight: 600;
+  color: #374151;
+}
+
+.company-card__details dd {
+  margin: 0;
+  color: #4b5563;
+}
+
+.company-card__link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  background-color: #1b4ad1;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.company-list__loading,
+.company-list__empty {
+  color: #6b7280;
+}

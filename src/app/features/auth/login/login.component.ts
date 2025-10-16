@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,7 +9,6 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { AuthService, LoginResult } from '@core/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { loginTexts } from '@core/constants/login.constants';
 
 @Component({
   selector: 'app-login',
@@ -41,13 +40,12 @@ export class LoginComponent implements OnInit {
   loading = signal(false);
   error = signal('');
   hidePassword = signal(true);
-  texts = loginTexts;
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
       const user = this.authService.currentUser();
       if (user?.isSuperAdmin) {
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/companies']);
       } else {
         this.router.navigate(['/dashboard']);
       }
@@ -67,13 +65,13 @@ export class LoginComponent implements OnInit {
       this.authService.login(email!, password!).subscribe({
         next: (result: LoginResult) => {
           if (result.isSuperAdmin) {
-            this.router.navigate(['/admin/dashboard']);
+            this.router.navigate(['/admin/companies']);
           } else {
             this.router.navigate(['/dashboard']);
           }
         },
         error: (err: any) => {
-          this.error.set(this.texts.invalidCredentials);
+          this.error.set('Invalid credentials or connection error.');
           this.loading.set(false);
           console.error(err);
         },

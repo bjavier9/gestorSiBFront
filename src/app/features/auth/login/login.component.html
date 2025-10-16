@@ -3,35 +3,35 @@
     <mat-card-header class="login-card-header">
       <img ngSrc="logo.png" alt="Company Logo" class="login-logo" width="80" height="80" priority>
       <mat-card-title>
-        <h1>{{ texts.welcome }}</h1>
+        <h1>Welcome back</h1>
       </mat-card-title>
-      <mat-card-subtitle>{{ texts.instructions }}</mat-card-subtitle>
+      <mat-card-subtitle>Please enter your credentials to sign in.</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         
         <mat-form-field appearance="outline">
-          <mat-label>{{ texts.email }}</mat-label>
+          <mat-label>Email</mat-label>
           <mat-icon matPrefix>email</mat-icon>
-          <input matInput formControlName="email" [placeholder]="texts.email" type="email">
+          <input matInput formControlName="email" placeholder="Email" type="email">
           @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')) {
-            <mat-error>{{ texts.emailInvalid }}</mat-error>
+            <mat-error>Enter a valid email address.</mat-error>
           }
           @if (loginForm.get('email')?.hasError('required')) {
-            <mat-error>{{ texts.emailRequired }}</mat-error>
+            <mat-error>Email is required.</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>{{ texts.password }}</mat-label>
+          <mat-label>Password</mat-label>
           <mat-icon matPrefix>lock</mat-icon>
           <input matInput formControlName="password" [type]="hidePassword() ? 'password' : 'text'">
           <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility($event)" [attr.aria-label]="'Toggle password visibility'">
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           @if (loginForm.get('password')?.hasError('required')) {
-            <mat-error>{{ texts.passwordRequired }}</mat-error>
+            <mat-error>Password is required.</mat-error>
           }
         </mat-form-field>
         
@@ -44,9 +44,9 @@
         <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading()" class="login-button">
           @if (loading()) {
             <mat-spinner diameter="24" style="margin-right: 8px;"></mat-spinner>
-            <span>{{ texts.loggingIn }}</span>
+            <span>Signing in...</span>
           } @else {
-            <span>{{ texts.login }}</span>
+            <span>Sign in</span>
           }
         </button>
       </form>

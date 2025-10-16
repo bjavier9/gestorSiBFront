@@ -1,0 +1,22 @@
+<div class="admin-shell">
+  <aside class="admin-shell__sidebar">
+    <h2 class="admin-shell__brand">Super Admin</h2>
+    <nav class="admin-shell__nav">
+      <a routerLink="/admin/companies" routerLinkActive="admin-shell__link--active">Companies</a>
+    </nav>
+  </aside>
+  <section class="admin-shell__content">
+    <mat-toolbar class="admin-shell__toolbar">
+      <img src="logo.svg" alt="SIB logo" class="admin-shell__logo" />
+      <span class="admin-shell__title">SIB</span>
+      <span class="admin-shell__spacer"></span>
+      <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </mat-toolbar>
+    <div class="admin-shell__page">
+      <router-outlet />
+    </div>
+  </section>
+</div>

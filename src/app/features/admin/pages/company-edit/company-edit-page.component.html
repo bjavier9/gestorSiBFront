@@ -1,0 +1,53 @@
+<ng-container *ngIf="company$ | async as company; else loading">
+  <ng-container *ngIf="company; else notFound">
+    <section class="company-form">
+      <header class="company-form__header">
+        <h1>Edit company</h1>
+        <p>Update the main information for {{ company.name }}.</p>
+        <a [routerLink]="['/admin/companies', company.id]">Back to company overview</a>
+      </header>
+
+      <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
+        <label class="company-form__field">
+          <span>Name</span>
+          <input type="text" formControlName="name" />
+        </label>
+
+        <label class="company-form__field">
+          <span>Tax id</span>
+          <input type="text" formControlName="taxId" />
+        </label>
+
+        <label class="company-form__field">
+          <span>Email</span>
+          <input type="email" formControlName="email" />
+        </label>
+
+        <label class="company-form__field">
+          <span>Phone</span>
+          <input type="tel" formControlName="phone" />
+        </label>
+
+        <label class="company-form__field">
+          <span>Address</span>
+          <input type="text" formControlName="address" />
+        </label>
+
+        <button type="submit">Save changes</button>
+      </form>
+
+      <p *ngIf="message()" class="company-form__message">{{ message() }}</p>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <p class="company-form__message">Loading company...</p>
+</ng-template>
+
+<ng-template #notFound>
+  <section class="company-form">
+    <p class="company-form__message">Company not found.</p>
+    <a routerLink="/admin/companies">Back to companies</a>
+  </section>
+</ng-template>
