@@ -1,106 +1,59 @@
-.company-overview {
-  display: flex;
-  flex-direction: column;
-}
-
-.company-overview__avatar {
-  display: grid;
-  place-items: center;
-  background: rgba(30, 92, 217, 0.12);
-  color: var(--mat-sys-color-primary, #1e5cd9);
-  border-radius: 50%;
-}
-
-.company-overview__avatar mat-icon {
-  font-size: 1.5rem;
-}
-
-.company-overview__content {
-  display: grid;
-  gap: 1rem;
-  padding-top: 1rem;
-}
-
-.company-overview__status {
-  justify-content: flex-start;
-}
-
-.company-overview__status mat-chip {
-  font-weight: 600;
-}
-
-.company-overview__label {
-  font-weight: 600;
-  color: var(--mat-sys-color-on-surface, #1f2937);
-  opacity: 0.8;
-}
-
-.company-overview mat-list-item {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.company-overview__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: flex-end;
-}
-
-.company-overview__state-card {
-  max-width: 420px;
-}
-
-.company-overview__state-text {
-  margin: 0;
-  color: var(--mat-sys-color-on-surface-variant, #475569);
-}
-
-.company-overview__state-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.company-overview--skeleton {
+.company-overview-skeleton {
   display: grid;
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: 2rem;
+  border-radius: 1.75rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  box-shadow: 0 22px 40px -30px rgba(15, 23, 42, 0.35);
 }
 
-.company-overview__skeleton-header {
+.company-overview-skeleton__header {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1rem;
   align-items: center;
 }
 
-.company-overview__skeleton-lines {
+.company-overview-skeleton__lines {
   display: grid;
   gap: 0.5rem;
 }
 
-.company-overview__skeleton-status {
-  display: flex;
-}
-
-.company-overview__skeleton-list {
+.company-overview-skeleton__list {
   display: grid;
   gap: 0.75rem;
 }
 
-.company-overview__skeleton-actions {
+.company-overview-skeleton__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
   justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.company-overview-state-card {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 2rem;
+  box-shadow: 0 16px 30px -26px rgba(15, 23, 42, 0.3);
+}
+
+.company-overview-state-card__text {
+  margin: 0;
+  color: #475569;
+  font-size: 0.95rem;
 }
 
 .skeleton {
   position: relative;
   overflow: hidden;
   background-color: rgba(148, 163, 184, 0.28);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
 }
 
 .skeleton::after {
@@ -111,16 +64,16 @@
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.65) 50%,
     rgba(255, 255, 255, 0) 100%
   );
   animation: company-overview-skeleton-shimmer 1.2s ease-in-out infinite;
 }
 
 .skeleton--avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  border-radius: 1rem;
 }
 
 .skeleton--line {
@@ -133,14 +86,14 @@
 }
 
 .skeleton--chip {
-  width: 96px;
+  width: 110px;
   height: 28px;
   border-radius: 999px;
 }
 
 .skeleton--divider {
-  height: 1px;
   width: 100%;
+  height: 1px;
   border-radius: 0;
 }
 

@@ -1,26 +1,25 @@
 ﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AuthService } from '@core/services/auth.service';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule],
   template: `
-    <div class="dashboard-container">
-      <h1>Welcome, {{ authService.currentUser()?.email }}!</h1>
-      <button mat-raised-button color="warn" (click)="authService.logout()">Logout</button>
+    <div class="flex h-screen flex-col items-center justify-center bg-slate-100 text-slate-900">
+      <h1 class="mb-4 text-2xl font-semibold">
+        Welcome, {{ authService.currentUser()?.email }}!
+      </h1>
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-full bg-rose-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-rose-700"
+        (click)="authService.logout()"
+      >
+        <span aria-hidden="true">⎋</span>
+        Logout
+      </button>
     </div>
   `,
-  styles: [`
-    .dashboard-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {

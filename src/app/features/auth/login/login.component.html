@@ -1,55 +1,81 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header class="login-card-header">
-      <img ngSrc="logo.png" alt="Company Logo" class="login-logo" width="80" height="80" priority>
-      <mat-card-title>
-        <h1>Welcome back</h1>
-      </mat-card-title>
-      <mat-card-subtitle>Please enter your credentials to sign in.</mat-card-subtitle>
-    </mat-card-header>
+<div class="login-shell">
+  <div class="login-card">
+    <header class="login-card__header">
+      <img
+        ngSrc="logo.png"
+        alt="Company Logo"
+        width="80"
+        height="80"
+        priority
+        class="login-card__logo"
+      />
+      <h1 class="login-card__title">Welcome back</h1>
+      <p class="login-card__subtitle">Please enter your credentials to sign in.</p>
+    </header>
 
-    <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <mat-icon matPrefix>email</mat-icon>
-          <input matInput formControlName="email" placeholder="Email" type="email">
-          @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')) {
-            <mat-error>Enter a valid email address.</mat-error>
-          }
-          @if (loginForm.get('email')?.hasError('required')) {
-            <mat-error>Email is required.</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput formControlName="password" [type]="hidePassword() ? 'password' : 'text'">
-          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility($event)" [attr.aria-label]="'Toggle password visibility'">
-            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          @if (loginForm.get('password')?.hasError('required')) {
-            <mat-error>Password is required.</mat-error>
-          }
-        </mat-form-field>
-        
-        @if (error()) {
-          <div class="error-message">
-            {{ error() }}
-          </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <label class="form-field">
+        <span class="form-field__label">Email</span>
+        <div class="form-field__input-wrapper">
+          <span class="form-field__icon" aria-hidden="true">✉️</span>
+          <input
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+            class="form-field__input"
+          />
+        </div>
+        @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')) {
+          <p class="form-field__error">Enter a valid email address.</p>
+        } @else if (loginForm.get('email')?.hasError('required')) {
+          <p class="form-field__error">Email is required.</p>
         }
+      </label>
 
-        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading()" class="login-button">
-          @if (loading()) {
-            <mat-spinner diameter="24" style="margin-right: 8px;"></mat-spinner>
-            <span>Signing in...</span>
-          } @else {
-            <span>Sign in</span>
-          }
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      <label class="form-field">
+        <span class="form-field__label">Password</span>
+        <div class="form-field__input-wrapper">
+          <span class="form-field__icon" aria-hidden="true">🔒</span>
+          <input
+            formControlName="password"
+            [type]="hidePassword() ? 'password' : 'text'"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            class="form-field__input form-field__input--with-button"
+          />
+          <button
+            type="button"
+            class="form-field__toggle"
+            (click)="togglePasswordVisibility($event)"
+            [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+          >
+            {{ hidePassword() ? 'Show' : 'Hide' }}
+          </button>
+        </div>
+        @if (loginForm.get('password')?.hasError('required')) {
+          <p class="form-field__error">Password is required.</p>
+        }
+      </label>
+
+      @if (error()) {
+        <div class="login-error" role="alert">
+          {{ error() }}
+        </div>
+      }
+
+      <button
+        type="submit"
+        class="login-submit"
+        [disabled]="loginForm.invalid || loading()"
+      >
+        @if (loading()) {
+          <span class="login-submit__spinner" aria-hidden="true"></span>
+          <span>Signing in...</span>
+        } @else {
+          <span>Sign in</span>
+        }
+      </button>
+    </form>
+  </div>
 </div>

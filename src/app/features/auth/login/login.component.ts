@@ -1,47 +1,33 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+
 import { AuthService, LoginResult } from '@core/services/auth.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    NgOptimizedImage
-  ],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
-  loginForm = this.fb.group({
+  readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]]
+    password: ['', [Validators.required]],
   });
 
-  loading = signal(false);
-  error = signal('');
-  hidePassword = signal(true);
+  readonly loading = signal(false);
+  readonly error = signal('');
+  readonly hidePassword = signal(true);
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       const user = this.authService.currentUser();
       if (user?.isSuperAdmin) {
@@ -58,27 +44,27 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loading.set(true);
-      this.error.set('');
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email!, password!).subscribe({
-        next: (result: LoginResult) => {
-          if (result.isSuperAdmin) {
-            this.router.navigate(['/admin/companies']);
-          } else {
-            this.router.navigate(['/dashboard']);
-          }
-        },
-        error: (err: any) => {
-          this.error.set('Invalid credentials or connection error.');
-          this.loading.set(false);
-          console.error(err);
-        },
-        complete: () => {
-          this.loading.set(false);
-        }
-      });
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    this.loading.set(true);
+    this.error.set('');
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email!, password!).subscribe({
+      next: (result: LoginResult) => {
+        const targetRoute = result.isSuperAdmin ? '/admin/companies' : '/dashboard';
+        this.router.navigate([targetRoute]);
+      },
+      error: (err: unknown) => {
+        console.error('Login error', err);
+        this.error.set('Invalid credentials or connection error.');
+        this.loading.set(false);
+      },
+      complete: () => {
+        this.loading.set(false);
+      },
+    });
   }
 }

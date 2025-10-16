@@ -1,38 +1,60 @@
-<mat-card class="company-form mat-elevation-z1">
-  <mat-card-header>
-    <mat-card-title>Create office</mat-card-title>
-    <mat-card-subtitle>Register a new office for this company.</mat-card-subtitle>
-  </mat-card-header>
+<section class="max-w-2xl">
+  <article class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-semibold text-slate-900">Create office</h1>
+      <p class="text-sm text-slate-500">Register a new office for this company.</p>
+    </header>
 
-  <mat-card-content>
-    <form class="company-form__body" [formGroup]="form" (ngSubmit)="submit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Office name</mat-label>
-        <input matInput type="text" formControlName="name" autocomplete="organization" />
-      </mat-form-field>
+    <form class="mt-6 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="form-field">
+        <span class="form-field__label">Office name</span>
+        <input
+          type="text"
+          formControlName="name"
+          autocomplete="organization"
+          class="form-field__input"
+        />
+      </label>
 
-      <mat-form-field appearance="outline">
-        <mat-label>City</mat-label>
-        <input matInput type="text" formControlName="city" autocomplete="address-level2" />
-      </mat-form-field>
+      <label class="form-field">
+        <span class="form-field__label">City</span>
+        <input
+          type="text"
+          formControlName="city"
+          autocomplete="address-level2"
+          class="form-field__input"
+        />
+      </label>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Phone</mat-label>
-        <input matInput type="tel" formControlName="phone" autocomplete="tel" />
-      </mat-form-field>
+      <label class="form-field">
+        <span class="form-field__label">Phone</span>
+        <input
+          type="tel"
+          formControlName="phone"
+          autocomplete="tel"
+          class="form-field__input"
+        />
+      </label>
 
-      <div class="company-form__actions">
-        <a mat-stroked-button color="primary" [routerLink]="['/admin/companies', companyId]">
-          Back to company overview
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <a
+          [routerLink]="['/admin/companies', companyId]"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+        >
+          ← Back to company overview
         </a>
-        <button mat-flat-button color="primary" type="submit">
+        <button
+          type="submit"
+          class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-700"
+        >
+          <span aria-hidden="true">📍</span>
           Create office
         </button>
       </div>
     </form>
 
-    <p *ngIf="message()" class="company-form__message mat-body-medium">
+    <p *ngIf="message()" class="mt-6 text-sm font-medium text-emerald-600">
       {{ message() }}
     </p>
-  </mat-card-content>
-</mat-card>
+  </article>
+</section>

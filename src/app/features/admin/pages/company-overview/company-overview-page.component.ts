@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { map, switchMap } from 'rxjs';
 
 import { CompanyService } from '@core/services/company.service';
@@ -19,12 +13,7 @@ import { CompanyService } from '@core/services/company.service';
     AsyncPipe,
     NgFor,
     RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatListModule,
-    MatDividerModule,
-    MatChipsModule,
+    NgClass,
   ],
   templateUrl: './company-overview-page.component.html',
   styleUrls: ['./company-overview-page.component.css'],

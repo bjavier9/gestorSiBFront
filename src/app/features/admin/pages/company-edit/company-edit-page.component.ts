@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { tap } from 'rxjs/operators';
 
 import { CompanyService } from '@core/services/company.service';
@@ -13,17 +9,7 @@ import { CompanyService } from '@core/services/company.service';
 @Component({
   selector: 'app-company-edit-page',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NgIf,
-    NgFor,
-    AsyncPipe,
-    RouterLink,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-  ],
+  imports: [ReactiveFormsModule, NgIf, NgFor, AsyncPipe, RouterLink],
   templateUrl: './company-edit-page.component.html',
   styleUrls: ['./company-edit-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,19 +34,21 @@ export class CompanyEditPageComponent {
 
   readonly company$ = this.companyService
     .getCompanyById(this.companyId)
-    .pipe(tap((company) => {
-      if (!company) {
-        return;
-      }
+    .pipe(
+      tap((company) => {
+        if (!company) {
+          return;
+        }
 
-      this.form.patchValue({
-        name: company.name,
-        taxId: company.taxId,
-        email: company.email,
-        phone: company.phone,
-        address: company.address,
-      });
-    }));
+        this.form.patchValue({
+          name: company.name,
+          taxId: company.taxId,
+          email: company.email,
+          phone: company.phone,
+          address: company.address,
+        });
+      }),
+    );
 
   submit(): void {
     if (this.form.invalid) {

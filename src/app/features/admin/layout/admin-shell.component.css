@@ -1,90 +1,147 @@
 .admin-shell {
-  height: 100vh;
-  background-color: var(--mat-app-background-color, #f4f6fb);
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #0f172a;
 }
 
-.admin-shell__sidenav {
-  width: 264px;
-  padding: 1.5rem 1.25rem;
-  display: flex;
+.admin-shell__sidebar {
+  width: 18.5rem;
+  display: none;
   flex-direction: column;
-  gap: 1.5rem;
-  background-color: var(--mat-sys-color-surface, #ffffff);
-  box-shadow: inset -1px 0 0 rgba(15, 23, 42, 0.08);
-  box-sizing: border-box;
+  gap: 2rem;
+  padding: 2rem 1.75rem;
+  border-right: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  box-shadow: inset -1px 0 0 rgba(15, 23, 42, 0.04);
+}
+
+@media (min-width: 1024px) {
+  .admin-shell__sidebar {
+    display: flex;
+  }
 }
 
 .admin-shell__brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--mat-sys-color-on-surface, #1f2937);
+  gap: 0.9rem;
 }
 
-.admin-shell__brand mat-icon {
-  font-size: 1.75rem;
+.admin-shell__brand-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #ffffff;
+  font-size: 1.35rem;
+}
+
+.admin-shell__brand-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.admin-shell__brand-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.admin-shell__nav {
+  display: grid;
+  gap: 0.35rem;
 }
 
 .admin-shell__nav-item {
-  border-radius: 0.75rem;
-  color: var(--mat-sys-color-on-surface, #1f2937);
-  transition: background-color 120ms ease, color 120ms ease;
-}
-
-.admin-shell__nav-item mat-icon {
-  color: inherit;
-}
-
-.admin-shell__nav-text {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.admin-shell__nav-item:hover {
-  background-color: rgba(30, 92, 217, 0.08);
-}
-
-.admin-shell__nav-item--active {
-  color: var(--mat-sys-color-primary, #1e5cd9);
-  background-color: rgba(30, 92, 217, 0.16);
-  font-weight: 600;
-}
-
-.admin-shell__content {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--mat-app-background-color, #f4f6fb);
-}
-
-.admin-shell__toolbar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0 2rem;
-  min-height: 64px;
-  background-color: var(--mat-sys-color-surface, #ffffff);
-  color: var(--mat-sys-color-on-surface, #1f2937);
+  padding: 0.75rem 1rem;
+  border-radius: 0.9rem;
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 500;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.admin-shell__nav-item:hover {
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+.admin-shell__nav-item--active {
+  background-color: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.admin-shell__nav-icon {
+  font-size: 1.2rem;
+}
+
+.admin-shell__main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+.admin-shell__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .admin-shell__logo {
-  height: 32px;
-  width: auto;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
 }
 
 .admin-shell__title {
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
+  color: #0f172a;
 }
 
-.admin-shell__spacer {
-  flex: 1 1 auto;
+.admin-shell__logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.admin-shell__logout:hover {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.admin-shell__logout-icon {
+  font-size: 1rem;
 }
 
 .admin-shell__page {
   flex: 1 1 auto;
-  padding: 2rem;
-  background-color: var(--mat-app-background-color, #f4f6fb);
+  padding: 1.75rem;
+  overflow-y: auto;
 }

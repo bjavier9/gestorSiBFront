@@ -7,7 +7,7 @@ This blueprint documents how the brokerage management frontend is structured aft
 ## 1. Product Snapshot
 
 - **Goal**: Super administrators manage brokerage companies, their users, and offices from a focused admin area. Regular users access a lightweight dashboard.
-- **Tech Stack**: Angular 17+ with standalone components, Angular Material, strict TypeScript, RxJS signals and observables.
+- **Tech Stack**: Angular 17+ with standalone components, Tailwind CSS, strict TypeScript, RxJS signals and observables.
 - **Entry Points**:
   - `/login` – authentication form with mock backend.
   - `/dashboard` – general user landing page.
@@ -50,8 +50,8 @@ src/
 | --- | --- |
 | Authentication | `AuthService` stores session data in `localStorage`, exposes signals, and attaches bearer tokens via `authInterceptor`. |
 | Navigation | Guards enforce login and super admin access. `HomeRedirectComponent` routes users to `/admin/companies` or `/dashboard`. |
-| Admin Shell | `AdminShellComponent` is built with `mat-sidenav-container` + `mat-toolbar`, providing persistent navigation, primary actions, and logout following Material specs. |
-| Companies | List, overview, edit, user-create, and office-create pages use Angular Material cards, chips, form fields, and buttons. Each route ships with skeleton placeholders that mirror final layouts while data loads. Forms still emit mock success messages until real APIs are wired. |
+| Admin Shell | `AdminShellComponent` uses a flex-based Tailwind layout (sidebar + header) with responsive typography, providing persistent navigation, primary actions, and logout controls. |
+| Companies | List, overview, edit, user-create, and office-create pages rely on Tailwind utility classes and light custom CSS for skeletons, badges, and forms. Each route ships with skeleton placeholders that mirror final layouts while data loads. Forms still emit mock success messages until real APIs are wired. |
 | Models | `Company` is the canonical shape. Mapping from API responses happens in `CompanyService`. |
 
 ---
@@ -64,7 +64,7 @@ src/
 4. **OnPush + async pipe** – mandatory for all components.
 5. **Signals where sensible** – prefer signals for local UI state, observables for async flows.
 6. **No `any`** – strict typing, explicit interfaces, no implicit `any`.
-7. **Material-first UI** – prefer Angular Material components and design tokens; use custom CSS only to compose layout or refine spacing/color within the Material system.
+7. **Tailwind-first UI** – prefer Tailwind utility classes and CSS variables; author small component styles only when utilities fall short.
 8. **Skeleton-friendly loading** – long-running async views expose skeleton placeholders that match the final layout footprint while data resolves.
 9. **Lightweight styling** – stick to small CSS files; avoid large global styles.
 10. **Separation of concerns** – HTTP logic stays in services; components orchestrate UI only.
@@ -86,7 +86,7 @@ src/
 
 ### 5.1 Component (page or sub-component)
 1. Create `<name>.component.ts` with `standalone: true`, `changeDetection: OnPush`.
-2. Import required Angular Material modules explicitly.
+2. Compose layouts with Tailwind utility classes; keep component stylesheets for shared patterns (e.g., form-field wrappers, skeleton animations).
 3. Keep templates in a separate `.html` file and styles in `.css`.
 4. Use `inject(...)` instead of constructor injection.
 5. Expose public readonly properties; never mutate inputs.
