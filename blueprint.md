@@ -1,4 +1,4 @@
-# SIB Frontend Blueprint
+# SIP Frontend Blueprint
 
 This blueprint documents how the brokerage management frontend is structured after the latest refactor. Follow it to keep the codebase simple, consistent, and easy to extend.
 
@@ -158,4 +158,4 @@ src/
 - `npm run build` – production build (strict type checking).
 - `npm run test` – unit tests (once configured).
 
-Stay disciplined with these guidelines to keep the SIB frontend lean, readable, and ready for production APIs.***
+Stay disciplined with these guidelines to keep the SIP frontend lean, readable, and ready for production APIs.***

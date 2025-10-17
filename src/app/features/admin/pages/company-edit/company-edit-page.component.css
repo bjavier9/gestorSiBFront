@@ -111,6 +111,134 @@
   border-radius: 999px;
 }
 
+.company-logo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  border: 1px dashed #cbd5f5;
+  background-color: #f8fafc;
+}
+
+.company-logo__preview {
+  margin: 0;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+}
+
+.company-logo__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.company-logo__content {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 220px;
+}
+
+.company-logo__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.company-logo__description {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.company-logo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.company-logo__upload {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background-color: #0ea5e9;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.company-logo__upload:hover {
+  background-color: #0284c7;
+}
+
+.company-logo__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.company-logo__upload-text {
+  pointer-events: none;
+}
+
+.company-logo__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+.company-logo__action--ghost {
+  border-color: #cbd5f5;
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+.company-logo__action--ghost:hover:enabled {
+  background-color: #f1f5f9;
+}
+
+.company-logo__action--secondary {
+  border-color: #e2e8f0;
+  color: #0f172a;
+  background-color: #e2e8f0;
+}
+
+.company-logo__action--secondary:hover:enabled {
+  background-color: #cbd5f5;
+}
+
+.company-logo__action:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.company-logo__error {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
 @keyframes company-form-skeleton-shimmer {
   100% {
     transform: translateX(100%);

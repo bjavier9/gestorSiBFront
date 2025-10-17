@@ -6,8 +6,10 @@ import { AdminShellComponent } from '@features/admin/layout/admin-shell.componen
 import { CompanyListPageComponent } from '@features/admin/pages/company-list/company-list-page.component';
 import { CompanyOverviewPageComponent } from '@features/admin/pages/company-overview/company-overview-page.component';
 import { CompanyUsersPageComponent } from '@features/admin/pages/company-users/company-users-page.component';
+import { CompanyUserCreatePageComponent } from '@features/admin/pages/company-user-create/company-user-create-page.component';
 import { CompanyOfficesPageComponent } from '@features/admin/pages/company-offices/company-offices-page.component';
 import { CompanyEditPageComponent } from '@features/admin/pages/company-edit/company-edit-page.component';
+import { CompanyOfficeEditPageComponent } from '@features/admin/pages/company-office-edit/company-office-edit-page.component';
 import { HomeRedirectComponent } from '@features/home/home-redirect.component';
 
 export const routes: Routes = [
@@ -29,7 +31,12 @@ export const routes: Routes = [
       { path: 'companies', component: CompanyListPageComponent },
       { path: 'companies/:companyId', component: CompanyOverviewPageComponent },
       { path: 'companies/:companyId/users', component: CompanyUsersPageComponent },
+      { path: 'companies/:companyId/users/create', component: CompanyUserCreatePageComponent },
       { path: 'companies/:companyId/offices', component: CompanyOfficesPageComponent },
+      {
+        path: 'companies/:companyId/offices/:officeId/edit',
+        component: CompanyOfficeEditPageComponent,
+      },
       { path: 'companies/:companyId/edit', component: CompanyEditPageComponent },
     ],
   },
