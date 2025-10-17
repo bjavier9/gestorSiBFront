@@ -1,5 +1,13 @@
 <ng-container *ngIf="company$ | async as company; else loading">
   <ng-container *ngIf="company; else notFound">
+    <app-admin-breadcrumbs
+      [items]="[
+        { label: 'Companies', link: ['/admin/companies'] },
+        { label: company.name, link: ['/admin/companies', company.id] },
+        { label: 'Edit company' }
+      ]"
+    ></app-admin-breadcrumbs>
+
     <section class="space-y-6">
       <article class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <header class="space-y-2">

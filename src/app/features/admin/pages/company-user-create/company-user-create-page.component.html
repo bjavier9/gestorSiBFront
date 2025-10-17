@@ -1,5 +1,14 @@
 <ng-container *ngIf="company$ | async as company; else loading">
   <section class="mx-auto max-w-3xl space-y-6">
+    <app-admin-breadcrumbs
+      [items]="[
+        { label: 'Companies', link: ['/admin/companies'] },
+        { label: company.name, link: ['/admin/companies', company.id] },
+        { label: 'Users', link: ['/admin/companies', company.id, 'users'] },
+        { label: 'Create user' }
+      ]"
+    ></app-admin-breadcrumbs>
+
     <header class="space-y-2">
       <h1 class="text-3xl font-semibold text-slate-900">Create user for {{ company.name }}</h1>
       <p class="text-sm text-slate-500">

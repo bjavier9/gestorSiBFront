@@ -9,6 +9,7 @@ import { CompanyService } from '@core/services/company.service';
 import { OfficeService } from '@core/services/office.service';
 import { Company } from '@core/models/company.model';
 import { Office } from '@core/models/office.model';
+import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-overview-page',
@@ -19,6 +20,7 @@ import { Office } from '@core/models/office.model';
     NgFor,
     RouterLink,
     NgClass,
+    BreadcrumbsComponent,
   ],
   templateUrl: './company-overview-page.component.html',
   styleUrls: ['./company-overview-page.component.css'],

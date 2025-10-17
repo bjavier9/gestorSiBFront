@@ -9,6 +9,7 @@ import { catchError, finalize } from 'rxjs/operators';
 import { OfficeService } from '@core/services/office.service';
 import { CompanyService } from '@core/services/company.service';
 import { Office, UpdateOfficeRequest } from '@core/models/office.model';
+import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-office-edit-page',
@@ -19,6 +20,7 @@ import { Office, UpdateOfficeRequest } from '@core/models/office.model';
     AsyncPipe,
     NgClass,
     RouterLink,
+    BreadcrumbsComponent,
   ],
   templateUrl: './company-office-edit-page.component.html',
   styleUrls: ['../company-offices/company-offices-page.component.css'],

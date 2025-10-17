@@ -8,11 +8,12 @@ import { catchError, finalize, of } from 'rxjs';
 
 import { CompanyService } from '@core/services/company.service';
 import { CompanyFromApi } from '@core/models/company.model';
+import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-edit-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, NgFor, AsyncPipe, RouterLink, NgClass],
+  imports: [ReactiveFormsModule, NgIf, NgFor, AsyncPipe, RouterLink, NgClass, BreadcrumbsComponent],
   templateUrl: './company-edit-page.component.html',
   styleUrls: ['./company-edit-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

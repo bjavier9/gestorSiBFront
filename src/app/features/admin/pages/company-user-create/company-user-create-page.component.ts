@@ -15,6 +15,7 @@ import { CompanyService } from '@core/services/company.service';
 import { CreateEnteRequest, EnteMetadataPersonaNatural } from '@core/models/ente.model';
 import { Office } from '@core/models/office.model';
 import { CompanyUserRole } from '@core/models/company-user.model';
+import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 interface CompanyUserFormValue {
   firstName: string | null;
@@ -40,7 +41,7 @@ interface CompanyUserFormValue {
 @Component({
   selector: 'app-company-user-create-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, AsyncPipe, NgFor, NgClass, RouterLink],
+  imports: [ReactiveFormsModule, NgIf, AsyncPipe, NgFor, NgClass, RouterLink, BreadcrumbsComponent],
   templateUrl: './company-user-create-page.component.html',
   styleUrls: ['./company-user-create-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

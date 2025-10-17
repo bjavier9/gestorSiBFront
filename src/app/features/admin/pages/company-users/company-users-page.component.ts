@@ -9,11 +9,12 @@ import { CompanyService } from '@core/services/company.service';
 import { UserService } from '@core/services/user.service';
 import { CompanyUser } from '@core/models/company-user.model';
 import { AuthService } from '@core/services/auth.service';
+import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-users-page',
   standalone: true,
-  imports: [NgIf, NgFor, AsyncPipe, NgClass, RouterLink],
+  imports: [NgIf, NgFor, AsyncPipe, NgClass, RouterLink, BreadcrumbsComponent],
   templateUrl: './company-users-page.component.html',
   styleUrls: ['./company-users-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
