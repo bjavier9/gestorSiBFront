@@ -1,5 +1,7 @@
+@let company = company$ | async;
+
 <section class="max-w-2xl space-y-6">
-  <ng-container *ngIf="company$ | async as company; else officesBreadcrumbFallback">
+  @if (company) {
     <app-admin-breadcrumbs
       [items]="[
         { label: 'Companies', link: ['/admin/companies'] },
@@ -7,24 +9,22 @@
         { label: 'Offices' }
       ]"
     ></app-admin-breadcrumbs>
-  </ng-container>
-  <ng-template #officesBreadcrumbFallback>
+  } @else {
     <app-admin-breadcrumbs
       [items]="[{ label: 'Companies', link: ['/admin/companies'] }, { label: 'Offices' }]"
     ></app-admin-breadcrumbs>
-  </ng-template>
+  }
 
   <article class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
     <header class="space-y-2">
       <h1 class="text-2xl font-semibold text-slate-900">Create office</h1>
       <p class="text-sm text-slate-500">
-        <ng-container *ngIf="company$ | async as company; else genericOfficeDescription">
+        @if (company) {
           Register a new office for {{ company.name }}.
-        </ng-container>
+        } @else {
+          <span>Register a new office for this company.</span>
+        }
       </p>
-      <ng-template #genericOfficeDescription>
-        <span class="text-sm text-slate-500">Register a new office for this company.</span>
-      </ng-template>
     </header>
 
     <form class="mt-6 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
@@ -73,7 +73,7 @@
           [routerLink]="['/admin/companies', companyId]"
           class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
         >
-          ← Back to company overview
+          Back to company overview
         </a>
         <button
           type="submit"
@@ -81,21 +81,21 @@
           [attr.aria-busy]="isSubmitting()"
           class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <span aria-hidden="true">📍</span>
           Create office
         </button>
       </div>
     </form>
 
-    <p
-      *ngIf="feedback() as currentFeedback"
-      class="mt-6 text-sm font-medium"
-      [ngClass]="{
-        'text-emerald-600': currentFeedback.tone === 'success',
-        'text-red-600': currentFeedback.tone === 'error'
-      }"
-    >
-      {{ currentFeedback.text }}
-    </p>
+    @if (feedback(); as currentFeedback) {
+      <p
+        class="mt-6 text-sm font-medium"
+        [ngClass]="{
+          'text-emerald-600': currentFeedback.tone === 'success',
+          'text-red-600': currentFeedback.tone === 'error'
+        }"
+      >
+        {{ currentFeedback.text }}
+      </p>
+    }
   </article>
 </section>

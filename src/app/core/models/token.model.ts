@@ -1,7 +1,18 @@
-export interface DecodedToken {
+export interface AuthTokenUserPayload {
+  uid: string;
   email: string;
+  role?: string;
+  companiaCorretajeId?: string;
+  oficinaId?: string;
+  enteId?: string;
+  pendienteCia?: boolean;
+  name?: string;
+  [key: string]: unknown;
+}
+
+export interface DecodedToken {
   exp: number;
-  iyear: number;
-  role: string;
-  unique_name: string;
+  iat: number;
+  user?: AuthTokenUserPayload;
+  [key: string]: unknown;
 }

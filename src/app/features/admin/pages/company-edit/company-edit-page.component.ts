@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { tap } from 'rxjs/operators';
@@ -9,11 +9,19 @@ import { catchError, finalize, of } from 'rxjs';
 import { CompanyService } from '@core/services/company.service';
 import { CompanyFromApi } from '@core/models/company.model';
 import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
+import { ConfirmDialogComponent } from '@features/admin/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company-edit-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, NgFor, AsyncPipe, RouterLink, NgClass, BreadcrumbsComponent],
+  imports: [
+    ReactiveFormsModule,
+    AsyncPipe,
+    RouterLink,
+    NgClass,
+    BreadcrumbsComponent,
+    ConfirmDialogComponent,
+  ],
   templateUrl: './company-edit-page.component.html',
   styleUrls: ['./company-edit-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

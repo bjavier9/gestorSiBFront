@@ -1,25 +1,30 @@
-<nav *ngIf="items.length" aria-label="Breadcrumb" class="text-sm">
-  <ol class="flex flex-wrap items-center gap-2 text-slate-500">
-    <li *ngFor="let item of items; let last = last" class="flex items-center gap-2">
-      <ng-container *ngIf="!last && item.link; else breadcrumbLabel">
-        <a
-          [routerLink]="item.link"
-          class="inline-flex items-center font-medium transition hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
-        >
-          {{ item.label }}
-        </a>
-      </ng-container>
-      <ng-template #breadcrumbLabel>
-        <span
-          [attr.aria-current]="last ? 'page' : null"
-          class="font-medium"
-          [class.text-slate-700]="last"
-          [class.text-slate-500]="!last"
-        >
-          {{ item.label }}
-        </span>
-      </ng-template>
-      <span *ngIf="!last" aria-hidden="true" class="text-slate-300">/</span>
-    </li>
-  </ol>
-</nav>
+@if (items.length) {
+  <nav aria-label="Breadcrumb" class="text-sm">
+    <ol class="flex flex-wrap items-center gap-2 text-slate-500">
+      @for (item of items; track item; let last = $last) {
+        <li class="flex items-center gap-2">
+          @if (!last && item.link) {
+            <a
+              [routerLink]="item.link"
+              class="inline-flex items-center font-medium transition hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+            >
+              {{ item.label }}
+            </a>
+          } @else {
+            <span
+              [attr.aria-current]="last ? 'page' : null"
+              class="font-medium"
+              [class.text-slate-700]="last"
+              [class.text-slate-500]="!last"
+            >
+              {{ item.label }}
+            </span>
+          }
+          @if (!last) {
+            <span aria-hidden="true" class="text-slate-300">/</span>
+          }
+        </li>
+      }
+    </ol>
+  </nav>
+}

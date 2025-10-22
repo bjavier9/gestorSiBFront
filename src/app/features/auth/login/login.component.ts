@@ -30,6 +30,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       const user = this.authService.currentUser();
+      if (user?.requiresCompanySelection) {
+        this.router.navigate(['/select-company']);
+        return;
+      }
       if (user?.isSuperAdmin) {
         this.router.navigate(['/admin/companies']);
       } else {
@@ -54,6 +58,10 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email!, password!).subscribe({
       next: (result: LoginResult) => {
+        if (result.needsSelection) {
+          this.router.navigate(['/select-company']);
+          return;
+        }
         const targetRoute = result.isSuperAdmin ? '/admin/companies' : '/dashboard';
         this.router.navigate([targetRoute]);
       },

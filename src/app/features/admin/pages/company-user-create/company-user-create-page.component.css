@@ -3,6 +3,10 @@
   gap: 0.35rem;
 }
 
+.form-field--error .form-field__label {
+  color: #dc2626;
+}
+
 .form-field__label {
   font-size: 0.8rem;
   font-weight: 600;
@@ -21,9 +25,62 @@
   transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
 }
 
+.form-field__input--invalid {
+  border-color: #f87171;
+  background-color: #fef2f2;
+}
+
 .form-field__input:focus {
   outline: none;
   border-color: #2563eb;
   background-color: #ffffff;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-field__error {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #dc2626;
+}
+
+.skeleton-wrapper {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background-color: rgba(148, 163, 184, 0.28);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: user-create-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton--field {
+  height: 52px;
+}
+
+.skeleton--button {
+  width: 140px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+@keyframes user-create-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }

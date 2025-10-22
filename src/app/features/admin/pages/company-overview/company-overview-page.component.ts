@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BehaviorSubject, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, map, of, startWith, switchMap } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -10,17 +10,17 @@ import { OfficeService } from '@core/services/office.service';
 import { Company } from '@core/models/company.model';
 import { Office } from '@core/models/office.model';
 import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
+import { ConfirmDialogComponent } from '@features/admin/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company-overview-page',
   standalone: true,
   imports: [
-    NgIf,
     AsyncPipe,
-    NgFor,
     RouterLink,
     NgClass,
     BreadcrumbsComponent,
+    ConfirmDialogComponent,
   ],
   templateUrl: './company-overview-page.component.html',
   styleUrls: ['./company-overview-page.component.css'],
@@ -46,6 +46,43 @@ export class CompanyOverviewPageComponent {
   readonly officeLoadingState = signal<Record<string, boolean>>({});
   readonly pendingCompanyAction = signal<{ company: Company; nextStatus: boolean } | null>(null);
   readonly pendingOfficeAction = signal<{ office: Office; nextStatus: boolean } | null>(null);
+  readonly companyConfirmDescription = computed(() => {
+    const pending = this.pendingCompanyAction();
+    if (!pending) {
+      return '';
+    }
+    const action = pending.nextStatus ? 'Activate' : 'Deactivate';
+    return `${action} the company ${pending.company.name}. This will update the company visibility across the platform.`;
+  });
+  readonly companyConfirmActionText = computed(() => {
+    const pending = this.pendingCompanyAction();
+    if (!pending) {
+      return 'Confirm';
+    }
+    return pending.nextStatus ? 'Activate company' : 'Deactivate company';
+  });
+  readonly officeConfirmDescription = computed(() => {
+    const pending = this.pendingOfficeAction();
+    if (!pending) {
+      return '';
+    }
+    const action = pending.nextStatus ? 'Activate' : 'Deactivate';
+    return `${action} the office ${pending.office.nombre}. Users will immediately see the updated availability.`;
+  });
+  readonly officeConfirmActionText = computed(() => {
+    const pending = this.pendingOfficeAction();
+    if (!pending) {
+      return 'Confirm';
+    }
+    return pending.nextStatus ? 'Activate office' : 'Deactivate office';
+  });
+  readonly officeConfirmBusy = computed(() => {
+    const pending = this.pendingOfficeAction();
+    if (!pending) {
+      return false;
+    }
+    return this.isOfficeUpdating(pending.office.id);
+  });
 
   readonly company$ = this.companyId$.pipe(
     switchMap((companyId) =>
@@ -59,6 +96,7 @@ export class CompanyOverviewPageComponent {
           this.companyError.set(null);
 
           return this.companyService.getCompanyById(companyId).pipe(
+            startWith(undefined),
             catchError((error) => {
               console.error('Failed to load company', error);
 
@@ -90,6 +128,7 @@ export class CompanyOverviewPageComponent {
           this.officesError.set(null);
 
           return this.officeService.getCompanyOffices(companyId).pipe(
+            startWith(undefined),
             catchError((error) => {
               console.error('Failed to load company offices', error);
               this.officesError.set('Unable to load the offices. Please try again.');

@@ -1,4 +1,8 @@
-<ng-container *ngIf="company$ | async as company; else loading">
+@let company = company$ | async;
+@let roles = roles$ | async;
+@let offices = offices$ | async;
+
+@if (company) {
   <section class="mx-auto max-w-3xl space-y-6">
     <app-admin-breadcrumbs
       [items]="[
@@ -17,58 +21,172 @@
     </header>
 
     <article class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-        <div class="grid gap-6">
-          <label class="form-field">
+      @if (roles === undefined || offices === undefined) {
+        <div class="skeleton-wrapper">
+          <div class="grid gap-6">
+            @for (_ of skeletonFields; track $index) {
+              <div class="skeleton skeleton--field"></div>
+            }
+          </div>
+          <div class="flex flex-wrap justify-end gap-3">
+            <div class="skeleton skeleton--button"></div>
+            <div class="skeleton skeleton--button"></div>
+          </div>
+        </div>
+      } @else {
+        <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+          <div class="grid gap-6">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('firstName') }"
+          >
             <span class="form-field__label">First name</span>
-            <input type="text" formControlName="firstName" class="form-field__input" />
+            <input
+              type="text"
+              formControlName="firstName"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('firstName') }"
+              [attr.aria-invalid]="isFieldInvalid('firstName')"
+            />
+            @if (getFieldError('firstName'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('lastName') }"
+          >
             <span class="form-field__label">Last name</span>
-            <input type="text" formControlName="lastName" class="form-field__input" />
+            <input
+              type="text"
+              formControlName="lastName"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('lastName') }"
+              [attr.aria-invalid]="isFieldInvalid('lastName')"
+            />
+            @if (getFieldError('lastName'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('email') }"
+          >
             <span class="form-field__label">Email</span>
-            <input type="email" formControlName="email" class="form-field__input" />
+            <input
+              type="email"
+              formControlName="email"
+              class="form-field__input"
+              autocomplete="email"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('email') }"
+              [attr.aria-invalid]="isFieldInvalid('email')"
+            />
+            @if (getFieldError('email'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('role') }"
+          >
             <span class="form-field__label">Role</span>
-            <select formControlName="role" class="form-field__input">
+            <select
+              formControlName="role"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('role') }"
+              [attr.aria-invalid]="isFieldInvalid('role')"
+            >
               <option value="" disabled>Select role</option>
-              <option *ngFor="let role of roles$ | async" [value]="role">{{ role }}</option>
+              @for (role of roles ?? []; track role.rol) {
+                <option [value]="role.rol">{{ role.descripcion || role.rol }}</option>
+              }
             </select>
+            @if (getFieldError('role'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('documentType') }"
+          >
             <span class="form-field__label">Document type</span>
-            <input type="text" formControlName="documentType" class="form-field__input" />
+            <input
+              type="text"
+              formControlName="documentType"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('documentType') }"
+              [attr.aria-invalid]="isFieldInvalid('documentType')"
+            />
+            @if (getFieldError('documentType'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('documentNumber') }"
+          >
             <span class="form-field__label">Document number</span>
-            <input type="text" formControlName="documentNumber" class="form-field__input" />
+            <input
+              type="text"
+              formControlName="documentNumber"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('documentNumber') }"
+              [attr.aria-invalid]="isFieldInvalid('documentNumber')"
+            />
+            @if (getFieldError('documentNumber'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('phone') }"
+          >
             <span class="form-field__label">Phone</span>
-            <input type="tel" formControlName="phone" class="form-field__input" />
+            <input
+              type="tel"
+              formControlName="phone"
+              class="form-field__input"
+              autocomplete="tel"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('phone') }"
+              [attr.aria-invalid]="isFieldInvalid('phone')"
+            />
+            @if (getFieldError('phone'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
-          <label class="form-field">
+          <label
+            class="form-field"
+            [ngClass]="{ 'form-field--error': isFieldInvalid('address') }"
+          >
             <span class="form-field__label">Address</span>
-            <input type="text" formControlName="address" class="form-field__input" />
+            <input
+              type="text"
+              formControlName="address"
+              class="form-field__input"
+              [ngClass]="{ 'form-field__input--invalid': isFieldInvalid('address') }"
+              [attr.aria-invalid]="isFieldInvalid('address')"
+            />
+            @if (getFieldError('address'); as error) {
+              <span class="form-field__error">{{ error }}</span>
+            }
           </label>
 
           <label class="form-field">
             <span class="form-field__label">Office</span>
             <select formControlName="officeId" class="form-field__input">
               <option value="">No office</option>
-              <option *ngFor="let office of offices$ | async" [value]="office.id">
-                {{ office.nombre }}
-              </option>
+              @for (office of offices ?? []; track office.id) {
+                <option [value]="office.id">
+                  {{ office.nombre }}
+                </option>
+              }
             </select>
           </label>
 
@@ -116,50 +234,53 @@
           </label>
         </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <a
-            [routerLink]="['/admin/companies', company.id, 'users']"
-            class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-          >
-            Back to users
-          </a>
-          <button
-            type="submit"
-            [disabled]="isSubmitting()"
-            [attr.aria-busy]="isSubmitting()"
-            class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            Create user
-          </button>
-        </div>
-      </form>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <a
+              [routerLink]="['/admin/companies', company.id, 'users']"
+              class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+              Back to users
+            </a>
+            <button
+              type="submit"
+              [disabled]="isSubmitting()"
+              [attr.aria-busy]="isSubmitting()"
+              class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              Create user
+            </button>
+          </div>
+        </form>
+      }
 
-      <p
-        *ngIf="feedback() as currentFeedback"
-        class="mt-6 text-sm font-medium"
-        [ngClass]="{
-          'text-emerald-600': currentFeedback.tone === 'success',
-          'text-red-600': currentFeedback.tone === 'error'
-        }"
-      >
-        {{ currentFeedback.text }}
-      </p>
     </article>
   </section>
-</ng-container>
+} @else {
+  @if (company === null) {
+    <article class="company-form-state-card">
+      <p class="company-form-state-card__text">Company not found.</p>
+      <a
+        routerLink="/admin/companies"
+        class="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+      >
+        Back to companies
+      </a>
+    </article>
+  } @else {
+    <p class="text-sm text-slate-500">Loading company context...</p>
+  }
+}
 
-<ng-template #loading>
-  <p class="text-sm text-slate-500">Loading company context...</p>
-</ng-template>
-
-<ng-template #notFound>
-  <article class="company-form-state-card">
-    <p class="company-form-state-card__text">Company not found.</p>
-    <a
-      routerLink="/admin/companies"
-      class="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-    >
-      Back to companies
-    </a>
-  </article>
-</ng-template>
+<app-confirm-dialog
+  [open]="isConfirmationOpen()"
+  title="Confirm user creation"
+  [description]="confirmationMessage() || 'Are you sure you want to create this user?'"
+  confirmText="Create user"
+  cancelText="Cancel"
+  confirmTone="success"
+  icon="success"
+  [busy]="isSubmitting()"
+  [disableBackdropClose]="isSubmitting()"
+  (confirm)="confirmPendingCreation()"
+  (cancel)="cancelPendingCreation()"
+></app-confirm-dialog>

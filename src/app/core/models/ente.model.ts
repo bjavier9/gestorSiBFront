@@ -23,6 +23,7 @@ export interface CreateEnteRequest {
   idregion: number;
   activo: boolean;
   metadatos?: Partial<EnteMetadataPersonaNatural>;
+  companiaCorretajeId?: string;
 }
 
 export interface CreateEnteResponse {

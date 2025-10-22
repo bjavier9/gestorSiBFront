@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,7 +16,6 @@ import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/bre
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     AsyncPipe,
     NgClass,
     RouterLink,

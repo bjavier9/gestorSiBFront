@@ -1,0 +1,44 @@
+@if (toasts().length) {
+  <div
+    class="toast-stack fixed right-4 top-4 z-[1000] flex w-full max-w-sm flex-col gap-3 md:right-6 md:top-6"
+    role="region"
+    aria-live="polite"
+  >
+    @for (toast of toasts(); track toast.id) {
+      <div
+        class="flex items-start gap-3 rounded-xl border bg-white p-4 text-sm text-slate-600 shadow-lg transition"
+        [ngClass]="toneBorderClass(toast.tone)"
+        role="alert"
+      >
+        <div
+          class="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
+          [ngClass]="iconWrapperClass(toast.tone)"
+        >
+          @if (toast.tone === 'success') {
+            <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 13 4 4L19 7" />
+            </svg>
+          } @else {
+            <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.5 6.5 17.5 17.5M6.5 17.5 17.5 6.5" />
+            </svg>
+          }
+        </div>
+        <p class="flex-1 leading-relaxed text-slate-700">
+          {{ toast.text }}
+        </p>
+        <button
+          type="button"
+          class="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-transparent text-slate-400 transition focus:outline-none focus:ring-2 focus:ring-offset-2"
+          [ngClass]="closeButtonClass(toast.tone)"
+          (click)="dismiss(toast.id)"
+          aria-label="Dismiss notification"
+        >
+          <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+}

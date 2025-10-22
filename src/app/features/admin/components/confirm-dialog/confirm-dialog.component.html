@@ -1,0 +1,89 @@
+@if (open) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+      role="presentation"
+      (click)="handleBackdropClick()"
+    ></div>
+
+    <div class="relative w-full max-w-md">
+      <div
+        class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-description"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          type="button"
+          class="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+          [disabled]="busy"
+          (click)="handleCancel()"
+          aria-label="Close dialog"
+        >
+          <svg class="h-4 w-4" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M1 1l12 12m0-12L1 13"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+        <div class="px-6 pb-6 pt-8 text-center sm:px-8 sm:pb-8 sm:pt-10">
+          @if (showIcon) {
+            <div class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+              <svg
+                class="h-7 w-7"
+                [ngClass]="iconToneClass"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM10 9a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 9z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          }
+
+          <h2 id="confirm-dialog-title" class="text-xl font-semibold text-slate-900">
+            {{ title }}
+          </h2>
+
+          @if (description) {
+            <p id="confirm-dialog-description" class="mt-3 text-sm text-slate-600">
+              {{ description }}
+            </p>
+          }
+
+          <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
+              (click)="handleCancel()"
+              [disabled]="busy"
+            >
+              {{ cancelText }}
+            </button>
+            <button
+              type="button"
+              [class]="confirmButtonClasses"
+              (click)="handleConfirm()"
+              [disabled]="busy"
+              [attr.aria-busy]="busy"
+            >
+              {{ confirmText }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+

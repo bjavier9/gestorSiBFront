@@ -7,6 +7,7 @@ import { CompanyListPageComponent } from '@features/admin/pages/company-list/com
 import { CompanyOverviewPageComponent } from '@features/admin/pages/company-overview/company-overview-page.component';
 import { CompanyUsersPageComponent } from '@features/admin/pages/company-users/company-users-page.component';
 import { CompanyUserCreatePageComponent } from '@features/admin/pages/company-user-create/company-user-create-page.component';
+import { CompanyCreatePageComponent } from '@features/admin/pages/company-create/company-create-page.component';
 import { CompanyOfficesPageComponent } from '@features/admin/pages/company-offices/company-offices-page.component';
 import { CompanyEditPageComponent } from '@features/admin/pages/company-edit/company-edit-page.component';
 import { CompanyOfficeEditPageComponent } from '@features/admin/pages/company-office-edit/company-office-edit-page.component';
@@ -16,6 +17,14 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('@features/auth/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'select-company',
+    loadComponent: () =>
+      import('@features/dashboard/company-selection/company-selection.component').then(
+        (m) => m.CompanySelectionComponent
+      ),
+    canActivate: [authGuard],
   },
   {
     path: 'dashboard',
@@ -29,6 +38,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'companies', pathMatch: 'full' },
       { path: 'companies', component: CompanyListPageComponent },
+      { path: 'companies/create', component: CompanyCreatePageComponent },
       { path: 'companies/:companyId', component: CompanyOverviewPageComponent },
       { path: 'companies/:companyId/users', component: CompanyUsersPageComponent },
       { path: 'companies/:companyId/users/create', component: CompanyUserCreatePageComponent },

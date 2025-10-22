@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 export interface BreadcrumbItem {
@@ -10,7 +9,7 @@ export interface BreadcrumbItem {
 @Component({
   selector: 'app-admin-breadcrumbs',
   standalone: true,
-  imports: [NgIf, NgFor, RouterLink],
+  imports: [RouterLink],
   templateUrl: './breadcrumbs.component.html',
   styleUrls: ['./breadcrumbs.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
