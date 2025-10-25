@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 
 import { enteEndpoints } from '../api/ente-endpoints';
-import { CreateEnteRequest, CreateEnteResponse } from '../models/ente.model';
+import { CreateEnteRequest, CreateEnteResponse, Ente, EnteListResponse } from '../models/ente.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +25,16 @@ export class EnteService {
         return throwError(() => error);
       })
     );
+  }
+
+  searchEntesByEmail(email: string, companiaCorretajeId?: string): Observable<Ente[]> {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      return of([]);
+    }
+
+    const url = enteEndpoints.searchByEmail(trimmedEmail, companiaCorretajeId);
+    return this.http.get<EnteListResponse>(url).pipe(map((response) => response.body.data));
   }
 
   private extractExistingEnteId(error: HttpErrorResponse): string | null {

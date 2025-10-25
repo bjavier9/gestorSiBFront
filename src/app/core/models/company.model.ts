@@ -1,3 +1,15 @@
+export enum CompanyCurrency {
+  USD = 'USD',
+  CRC = 'CRC',
+  GTQ = 'GTQ',
+  HNL = 'HNL',
+  NIO = 'NIO',
+  PAB = 'PAB',
+  SVC = 'SVC',
+  BZD = 'BZD',
+  DOP = 'DOP',
+}
+
 export interface Company {
   id: string;
   name: string;

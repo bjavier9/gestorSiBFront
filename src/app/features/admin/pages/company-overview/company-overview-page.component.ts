@@ -9,8 +9,8 @@ import { CompanyService } from '@core/services/company.service';
 import { OfficeService } from '@core/services/office.service';
 import { Company } from '@core/models/company.model';
 import { Office } from '@core/models/office.model';
-import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
-import { ConfirmDialogComponent } from '@features/admin/components/confirm-dialog/confirm-dialog.component';
+import { BreadcrumbsComponent } from '@features/shared/components/breadcrumbs/breadcrumbs.component';
+import { ConfirmDialogComponent } from '@features/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company-overview-page',

@@ -108,6 +108,15 @@
                 class="company-field__input"
               />
             </label>
+
+            <label class="company-field">
+              <span class="company-field__label">Default currency</span>
+              <select formControlName="defaultCurrency" class="company-field__input">
+                @for (currency of currencyOptions; track currency) {
+                  <option [value]="currency">{{ currency }}</option>
+                }
+              </select>
+            </label>
           </div>
 
           <label class="company-field">

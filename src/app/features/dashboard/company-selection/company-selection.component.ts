@@ -7,24 +7,20 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AuthService } from '@core/services/auth.service';
 import { CompanyAssociation } from '@core/models/auth.model';
-import {
-  BreadcrumbItem,
-  BreadcrumbsComponent,
-} from '@features/admin/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-selection',
   standalone: true,
-  imports: [CommonModule, BreadcrumbsComponent],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './company-selection.component.html',
-  styleUrls: ['./company-selection.component.css'],
+  styleUrls: ['company-selection.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanySelectionComponent implements OnInit {
@@ -32,35 +28,36 @@ export class CompanySelectionComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Cuenta', link: ['/dashboard'] },
-    { label: 'Seleccionar compania' },
-  ];
-
-  readonly companies = computed<CompanyAssociation[]>(() => this.authService.pendingCompanies());
+  readonly companies = computed(() => this.authService.pendingCompanies());
   readonly isInitializing = signal(true);
   readonly isSelecting = signal(false);
   readonly error = signal<string | null>(null);
   readonly skeletonCards = Array.from({ length: 3 });
 
   ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     if (!this.authService.needsCompanySelection()) {
       this.router.navigate(['/dashboard']);
       return;
     }
 
     if (this.companies().length === 0) {
-      this.error.set('No hay companias pendientes. Inicia sesion nuevamente.');
+      this.loadPendingAssociations();
+    } else {
+      this.isInitializing.set(false);
     }
-
-    Promise.resolve().then(() => this.isInitializing.set(false));
   }
 
   trackCompany(_: number, company: CompanyAssociation): string {
-    return company.id ?? company.companiaCorretajeId ?? String(_);
+    return company?.compania?.id ?? String(_);
   }
 
-  selectCompany(companiaId: string): void {
+  selectCompany(company: CompanyAssociation): void {
+    const companiaId = company?.compania?.id;
     if (!companiaId || this.isSelecting()) {
       return;
     }
@@ -88,5 +85,28 @@ export class CompanySelectionComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  private loadPendingAssociations(): void {
+    this.isInitializing.set(true);
+    this.error.set(null);
+
+    this.authService
+      .loadPendingCompanies()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isInitializing.set(false))
+      )
+      .subscribe({
+        next: (associations) => {
+          if (!associations.length) {
+            this.error.set('No se encontraron companias activas. Cierra sesion e inicia nuevamente.');
+          }
+        },
+        error: (err: unknown) => {
+          console.error('Failed to load pending companies', err);
+          this.error.set('No se pudieron cargar las companias. Cierra sesion e inicia nuevamente.');
+        },
+      });
   }
 }

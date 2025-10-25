@@ -108,6 +108,15 @@
               class="company-field__input"
             />
           </label>
+
+          <label class="company-field">
+            <span class="company-field__label">Default currency</span>
+            <select formControlName="defaultCurrency" class="company-field__input">
+              @for (currency of currencyOptions; track currency) {
+                <option [value]="currency">{{ currency }}</option>
+              }
+            </select>
+          </label>
         </div>
 
         <label class="company-field">
@@ -137,18 +146,6 @@
           </button>
         </div>
       </form>
-
-      @if (feedback(); as currentFeedback) {
-        <p
-          class="mt-6 text-sm font-medium"
-          [ngClass]="{
-            'text-emerald-600': currentFeedback.tone === 'success',
-            'text-red-600': currentFeedback.tone === 'error'
-          }"
-        >
-          {{ currentFeedback.text }}
-        </p>
-      }
     </article>
   </section>
 }

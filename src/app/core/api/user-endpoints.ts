@@ -7,4 +7,5 @@ export const userEndpoints = {
   listAll: `${baseUrl}`,
   listOperationalByCompany: `${baseUrl}/compania/operativos`,
   updateStatus: (id: string) => `${baseUrl}/${id}/status`,
+  listAssociations: `${baseUrl}/me/associations`,
 };

@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CompanyService } from '@core/services/company.service';
-import { CompanyFromApi } from '@core/models/company.model';
+import { CompanyCurrency, CompanyFromApi } from '@core/models/company.model';
+import { ToastService } from '@core/services/toast.service';
 import {
   BreadcrumbItem,
   BreadcrumbsComponent,
-} from '@features/admin/components/breadcrumbs/breadcrumbs.component';
+} from '@features/shared/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-create-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgClass, BreadcrumbsComponent],
+  imports: [ReactiveFormsModule, RouterLink, BreadcrumbsComponent],
   templateUrl: './company-create-page.component.html',
   styleUrls: ['./company-create-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +35,7 @@ export class CompanyCreatePageComponent {
   private readonly router = inject(Router);
   private readonly companyService = inject(CompanyService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toastService = inject(ToastService);
   private readonly defaultLogo = 'noimagen.svg';
 
   readonly breadcrumbs: BreadcrumbItem[] = [
@@ -48,16 +49,17 @@ export class CompanyCreatePageComponent {
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
     address: [''],
+    defaultCurrency: [CompanyCurrency.USD, Validators.required],
   });
 
-  readonly feedback = signal<{ text: string; tone: 'success' | 'error' } | null>(null);
   readonly isSubmitting = signal(false);
   readonly isLoading = signal(true);
   readonly logoPreview = signal(this.defaultLogo);
   readonly logoError = signal<string | null>(null);
   readonly logoState = signal<'default' | 'custom'>('default');
-  readonly skeletonFields = Array.from({ length: 5 });
+  readonly skeletonFields = Array.from({ length: 6 });
   readonly skeletonActions = Array.from({ length: 2 });
+  readonly currencyOptions = Object.values(CompanyCurrency);
 
   private logoPayload: string | null = null;
 
@@ -68,20 +70,24 @@ export class CompanyCreatePageComponent {
 
   submit(): void {
     if (this.form.invalid) {
-      this.feedback.set({
-        text: 'Please fill in the required fields.',
-        tone: 'error',
-      });
+      this.toastService.showError('Please fill in the required fields.');
       return;
     }
 
     const value = this.form.getRawValue();
+    const currency = value.defaultCurrency as CompanyCurrency | undefined;
+    if (!currency) {
+      this.toastService.showError('Please select a default currency.');
+      return;
+    }
     const payload: Partial<CompanyFromApi> = {
       nombre: value.name?.trim() ?? '',
       rif: value.taxId?.trim() ?? '',
       correo: value.email?.trim() ?? '',
       telefono: value.phone?.trim() ?? '',
       direccion: value.address?.trim() ?? '',
+      monedasAceptadas: [currency],
+      monedaPorDefecto: currency,
     };
 
     if (this.logoState() === 'custom') {
@@ -89,7 +95,6 @@ export class CompanyCreatePageComponent {
     }
 
     this.isSubmitting.set(true);
-    this.feedback.set(null);
 
     this.companyService
       .createCompany(payload)
@@ -97,12 +102,10 @@ export class CompanyCreatePageComponent {
         takeUntilDestroyed(this.destroyRef),
         catchError((error) => {
           console.error('Failed to create company', error);
-          this.feedback.set({
-            text:
-              error?.error?.body?.error?.message ??
-              'Unable to create the company. Please try again.',
-            tone: 'error',
-          });
+          const message =
+            error?.error?.body?.error?.message ??
+            'Unable to create the company. Please try again.';
+          this.toastService.showError(message);
           return of(null);
         }),
         finalize(() => this.isSubmitting.set(false)),
@@ -112,12 +115,8 @@ export class CompanyCreatePageComponent {
           return;
         }
 
-        this.feedback.set({
-          text: 'Company created successfully.',
-          tone: 'success',
-        });
-
-        this.router.navigate(['/admin/companies', company.id]);
+        this.toastService.showSuccess('Company created successfully.');
+        this.router.navigate(['/admin/companies']);
       });
   }
 

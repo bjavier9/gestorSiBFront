@@ -68,6 +68,8 @@ src/
 8. **Skeleton-friendly loading** – long-running async views expose skeleton placeholders that match the final layout footprint while data resolves.
 9. **Lightweight styling** – stick to small CSS files; avoid large global styles.
 10. **Separation of concerns** – HTTP logic stays in services; components orchestrate UI only.
+11. **Angular v17 control flow** – rely on `@if`, `@for`, `@switch`, `@let`, and `@defer` instead of the deprecated structural directives (`*ngIf`, `*ngFor`, etc.).
+12. **Animations** � use the built-in `animate.enter` / `animate.leave` APIs; no global animation providers are required.
 
 ### 4.1 Clean Code Standards
 
@@ -159,3 +161,4 @@ src/
 - `npm run test` – unit tests (once configured).
 
 Stay disciplined with these guidelines to keep the SIP frontend lean, readable, and ready for production APIs.***
+

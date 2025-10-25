@@ -1,13 +1,19 @@
-export interface CompanyAssociation {
+export interface CompanyAssociationCompany {
   id: string;
+  nombre: string;
+}
+
+export interface CompanyAssociationOffice {
+  id: string;
+  nombre: string;
+}
+
+export interface CompanyAssociation {
+  usuarioCompaniaId: string;
   email: string;
-  companiaCorretajeId: string;
   rol: string;
-  activo: boolean;
-  fechaCreacion?: string;
-  esNuevo?: boolean;
-  enteId?: string;
-  oficinaId?: string;
+  compania: CompanyAssociationCompany;
+  oficina?: CompanyAssociationOffice | null;
 }
 
 export interface LoginResponsePayload {
@@ -45,6 +51,21 @@ export interface SelectCompanyApiResponse {
   body: {
     data: SelectCompanyPayload;
     token?: string;
+    message?: string;
+  };
+  status: {
+    code: number;
+    success: boolean;
+  };
+}
+
+export interface CompanyAssociationListResponse {
+  header: {
+    timestamp: string;
+    token?: string;
+  };
+  body: {
+    data: CompanyAssociation[];
     message?: string;
   };
   status: {

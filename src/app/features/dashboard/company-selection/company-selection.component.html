@@ -1,81 +1,107 @@
-<app-admin-breadcrumbs [items]="breadcrumbs"></app-admin-breadcrumbs>
-
-<section class="company-selection">
-  <header class="company-selection__toolbar">
-    <div class="company-selection__headline">
-      <p class="company-selection__eyebrow">Sesion activa</p>
-      <h1 class="company-selection__title">Selecciona la compania con la que quieres continuar</h1>
-      <p class="company-selection__subtitle">
-        Esta cuenta tiene varias asociaciones. Elige una para generar un nuevo token y acceder a tu
-        tablero.
-      </p>
-    </div>
-    <button type="button" class="company-selection__logout" (click)="logout()">
-      Cerrar sesion
-    </button>
-  </header>
-
-  @if (isInitializing()) {
-    <article class="company-selection__card company-selection__card--skeleton" aria-hidden="true">
-      <div class="skeleton skeleton--headline"></div>
-      <div class="skeleton skeleton--paragraph"></div>
-      <div class="company-selection__skeleton-list">
-        @for (_ of skeletonCards; track $index) {
-          <div class="skeleton skeleton--option"></div>
-        }
-      </div>
-    </article>
-  } @else {
-    <article class="company-selection__card">
-      @if (error(); as currentError) {
-        <p class="company-selection__message company-selection__message--error">
-          {{ currentError }}
+<section class="selection-shell">
+  <div class="selection-card">
+    <header class="selection-card__header">
+      <img
+        ngSrc="logo.png"
+        alt="Logo"
+        width="64"
+        height="64"
+        priority
+        class="selection-card__logo"
+      />
+      <div class="selection-card__heading">
+        <span class="selection-card__eyebrow">Sesion activa</span>
+        <h1 class="selection-card__title">Selecciona la compania con la que deseas continuar</h1>
+        <p class="selection-card__description">
+          Esta cuenta tiene varias asociaciones. Elige una opcion para generar un nuevo token y continuar.
         </p>
+      </div>
+    </header>
+
+    @if (isInitializing()) {
+      <div class="selection-skeleton" aria-hidden="true">
+        <div class="selection-skeleton__line selection-skeleton__line--title"></div>
+        <div class="selection-skeleton__line selection-skeleton__line--subtitle"></div>
+        <ul class="selection-skeleton__list">
+          @for (_ of skeletonCards; track $index) {
+            <li class="selection-skeleton__item">
+              <div class="selection-skeleton__line selection-skeleton__line--eyebrow"></div>
+              <div class="selection-skeleton__line selection-skeleton__line--name"></div>
+              <div class="selection-skeleton__line selection-skeleton__line--meta"></div>
+              <div class="selection-skeleton__line selection-skeleton__line--button"></div>
+            </li>
+          }
+        </ul>
+      </div>
+    } @else {
+      @if (error(); as currentError) {
+        <div class="selection-alert" role="alert">
+          {{ currentError }}
+        </div>
       }
 
       @if (companies().length === 0) {
-        <div class="company-selection__empty">
-          <p>No se encontraron registros activos para esta cuenta.</p>
-          <button type="button" class="company-selection__logout company-selection__logout--ghost" (click)="logout()">
+        <div class="selection-empty">
+          <h2 class="selection-empty__title">Sin asociaciones activas</h2>
+          <p class="selection-empty__text">
+            No encontramos companias vinculadas a esta cuenta. Cierra sesion e inicia nuevamente.
+          </p>
+          <button type="button" class="selection-empty__button" (click)="logout()">
             Volver al inicio de sesion
           </button>
         </div>
       } @else {
-        <div class="company-selection__list">
+        <ul class="selection-list" role="list" [attr.aria-busy]="isSelecting()">
           @for (company of companies(); track trackCompany($index, company)) {
-            <article class="company-selection__option">
-              <header class="company-selection__option-header">
-                <p class="company-selection__option-eyebrow">Compania</p>
-                <h2 class="company-selection__option-title">
-                  {{ company.companiaCorretajeId }}
-                </h2>
-              </header>
-
-              <dl class="company-selection__meta">
-                <div class="company-selection__meta-item">
-                  <dt>Rol asignado</dt>
-                  <dd class="company-selection__meta-value">{{ company.rol }}</dd>
-                </div>
-                @if (company.oficinaId) {
-                  <div class="company-selection__meta-item">
-                    <dt>Oficina</dt>
-                    <dd class="company-selection__meta-value">{{ company.oficinaId }}</dd>
-                  </div>
-                }
-              </dl>
-
+            <li>
               <button
                 type="button"
-                class="company-selection__choose"
+                class="selection-item"
                 [disabled]="isSelecting()"
-                (click)="selectCompany(company.companiaCorretajeId)"
+                [attr.aria-label]="
+                  'Seleccionar compania ' +
+                  (company.compania.nombre || company.compania.id || 'desconocida')
+                "
+                (click)="selectCompany(company)"
               >
-                {{ isSelecting() ? 'Seleccionando...' : 'Seleccionar compania' }}
+                <div class="selection-item__header">
+                  <span class="selection-item__label">Compania</span>
+                  <span class="selection-chip selection-chip--role">
+                    Rol: {{ company.rol }}
+                  </span>
+                </div>
+                <h2 class="selection-item__title">
+                  {{ company.compania.nombre || company.compania.id }}
+                </h2>
+                <div class="selection-item__tags">
+                  <span class="selection-tag">
+                    ID: {{ company.compania.id }}
+                  </span>
+                  @if (company.oficina) {
+                    <span class="selection-tag">
+                      Oficina:
+                      {{
+                        company.oficina.nombre ||
+                          company.oficina.id ||
+                          'Sin nombre'
+                      }}
+                    </span>
+                  }
+                </div>
+                <span class="selection-item__cta">
+                  {{ isSelecting() ? 'Seleccionando...' : 'Continuar' }}
+                </span>
               </button>
-            </article>
+            </li>
           }
-        </div>
+        </ul>
       }
-    </article>
-  }
+    }
+
+    <footer class="selection-card__footer">
+      <button type="button" class="selection-card__logout" (click)="logout()">
+        Cerrar sesion
+      </button>
+    </footer>
+  </div>
 </section>

@@ -6,7 +6,7 @@ import { Company } from '@core/models/company.model';
 import {
   BreadcrumbsComponent,
   BreadcrumbItem,
-} from '@features/admin/components/breadcrumbs/breadcrumbs.component';
+} from '@features/shared/components/breadcrumbs/breadcrumbs.component';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({

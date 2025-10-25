@@ -9,7 +9,7 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 import { OfficeService } from '@core/services/office.service';
 import { CompanyService } from '@core/services/company.service';
 import { CreateOfficeRequest } from '@core/models/office.model';
-import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
+import { BreadcrumbsComponent } from '@features/shared/components/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-company-offices-page',

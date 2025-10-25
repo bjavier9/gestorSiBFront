@@ -7,9 +7,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, finalize, of } from 'rxjs';
 
 import { CompanyService } from '@core/services/company.service';
-import { CompanyFromApi } from '@core/models/company.model';
-import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
-import { ConfirmDialogComponent } from '@features/admin/components/confirm-dialog/confirm-dialog.component';
+import { CompanyCurrency, CompanyFromApi } from '@core/models/company.model';
+import { BreadcrumbsComponent } from '@features/shared/components/breadcrumbs/breadcrumbs.component';
+import { ConfirmDialogComponent } from '@features/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company-edit-page',
@@ -51,6 +51,7 @@ export class CompanyEditPageComponent {
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
     address: [''],
+    defaultCurrency: [CompanyCurrency.USD, Validators.required],
   });
 
   readonly feedback = signal<{ text: string; tone: 'success' | 'error' } | null>(null);
@@ -60,12 +61,14 @@ export class CompanyEditPageComponent {
   readonly logoState = signal<'unchanged' | 'new' | 'removed'>('unchanged');
   readonly confirmationMessage = signal<string | null>(null);
   readonly isConfirmationOpen = signal(false);
-  readonly skeletonFields = Array.from({ length: 5 });
+  readonly skeletonFields = Array.from({ length: 6 });
   readonly skeletonActions = Array.from({ length: 2 });
+  readonly currencyOptions = Object.values(CompanyCurrency);
 
   private originalLogo: string | null = null;
   private logoPayload: string | null = null;
   private pendingUpdatePayload: Partial<CompanyFromApi> | null = null;
+  private currentAcceptedCurrencies: string[] = [];
 
   readonly company$ = this.companyService
     .getCompanyById(this.companyId)
@@ -81,8 +84,12 @@ export class CompanyEditPageComponent {
           email: company.email,
           phone: company.phone,
           address: company.address,
+          defaultCurrency: company.defaultCurrency as CompanyCurrency,
         });
 
+        this.currentAcceptedCurrencies = Array.isArray(company.acceptedCurrencies)
+          ? [...company.acceptedCurrencies]
+          : [];
         this.resetLogoState(company.logo);
       }),
     );
@@ -97,12 +104,22 @@ export class CompanyEditPageComponent {
     }
 
     const value = this.form.getRawValue();
+    const currency = value.defaultCurrency as CompanyCurrency | undefined;
+    if (!currency) {
+      this.feedback.set({
+        text: 'Please select a default currency.',
+        tone: 'error',
+      });
+      return;
+    }
     const payload: Partial<CompanyFromApi> = {
       nombre: value.name?.trim() ?? '',
       rif: value.taxId?.trim() ?? '',
       correo: value.email?.trim() ?? '',
       telefono: value.phone?.trim() ?? '',
       direccion: value.address?.trim() ?? '',
+      monedaPorDefecto: currency,
+      monedasAceptadas: this.buildAcceptedCurrencies(currency),
     };
 
     if (this.logoState() === 'new') {
@@ -251,5 +268,18 @@ export class CompanyEditPageComponent {
         this.pendingUpdatePayload = null;
         this.router.navigate(['/admin/companies', this.companyId]);
       });
+  }
+
+  private buildAcceptedCurrencies(defaultCurrency: CompanyCurrency): string[] {
+    const current = Array.isArray(this.currentAcceptedCurrencies)
+      ? [...this.currentAcceptedCurrencies]
+      : [];
+    if (!current.includes(defaultCurrency)) {
+      current.push(defaultCurrency);
+    }
+    const unique = Array.from(new Set(current.map((currency) => currency.trim()))).filter(
+      (currency) => currency.length > 0,
+    );
+    return unique;
   }
 }

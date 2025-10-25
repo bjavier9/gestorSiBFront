@@ -1,0 +1,7 @@
+.toast-stack {
+  pointer-events: none;
+}
+
+.toast-stack > * {
+  pointer-events: auto;
+}

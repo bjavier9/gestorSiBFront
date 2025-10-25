@@ -9,8 +9,8 @@ import { CompanyService } from '@core/services/company.service';
 import { UserService } from '@core/services/user.service';
 import { CompanyUser } from '@core/models/company-user.model';
 import { AuthService } from '@core/services/auth.service';
-import { BreadcrumbsComponent } from '@features/admin/components/breadcrumbs/breadcrumbs.component';
-import { ConfirmDialogComponent } from '@features/admin/components/confirm-dialog/confirm-dialog.component';
+import { BreadcrumbsComponent } from '@features/shared/components/breadcrumbs/breadcrumbs.component';
+import { ConfirmDialogComponent } from '@features/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company-users-page',

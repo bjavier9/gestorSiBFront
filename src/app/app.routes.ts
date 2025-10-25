@@ -32,6 +32,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'gestiones/:gestionId',
+    loadComponent: () =>
+      import('@features/dashboard/pages/gestion-detail/gestion-detail-page.component').then(
+        (m) => m.GestionDetailPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'admin',
     component: AdminShellComponent,
     canActivate: [authGuard, adminGuard],

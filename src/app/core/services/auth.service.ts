@@ -6,10 +6,12 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { authEndpoints } from '../api/auth-endpoints';
+import { userEndpoints } from '../api/user-endpoints';
 import { User } from '../models/user.model';
 import { DecodedToken } from '../models/token.model';
 import {
   CompanyAssociation,
+  CompanyAssociationListResponse,
   LoginApiResponse,
   LoginResponsePayload,
   SelectCompanyApiResponse,
@@ -62,7 +64,30 @@ export class AuthService {
           password,
         })
       ),
-      map((apiResponse) => this.handleLoginPayload(apiResponse.body.data)),
+        switchMap((apiResponse) => {
+          const initialResult = this.handleLoginPayload(apiResponse.body.data);
+
+          if (!initialResult.needsSelection) {
+            this.clearPendingCompanies();
+            return of({ ...initialResult, companies: [] });
+          }
+
+          return this.loadPendingCompanies().pipe(
+            map((associations) => ({
+              ...initialResult,
+              companies: associations,
+            })),
+            catchError((fetchError) => {
+              console.error('Pending companies fetch error', fetchError);
+              const fallback = this.normalizeAssociations(initialResult.companies ?? []);
+              this.storePendingCompanies(fallback);
+              return of({
+                ...initialResult,
+                companies: fallback,
+              });
+            })
+          );
+        }),
       catchError((error) => {
         console.error('Login error', error);
         return throwError(() => new Error('Login failed'));
@@ -116,12 +141,6 @@ export class AuthService {
     });
 
     this.persistSession(user, decoded.exp);
-
-    if (payload.needsSelection) {
-      this.storePendingCompanies(payload.companias ?? []);
-    } else {
-      this.clearPendingCompanies();
-    }
 
     return {
       isSuperAdmin: !!user.isSuperAdmin,
@@ -216,6 +235,21 @@ export class AuthService {
     }
   }
 
+  private fetchPendingCompanies(): Observable<CompanyAssociation[]> {
+    return this.http
+      .get<CompanyAssociationListResponse>(userEndpoints.listAssociations)
+      .pipe(map((response) => this.normalizeAssociations(response.body.data ?? [])));
+  }
+
+  loadPendingCompanies(): Observable<CompanyAssociation[]> {
+    return this.fetchPendingCompanies().pipe(
+      map((associations) => {
+        this.storePendingCompanies(associations);
+        return associations;
+      })
+    );
+  }
+
   private storePendingCompanies(companies: CompanyAssociation[]): void {
     localStorage.setItem(this.pendingCompaniesKey, JSON.stringify(companies));
     this.pendingCompanies.set(companies);
@@ -229,8 +263,8 @@ export class AuthService {
     }
 
     try {
-      const parsed = JSON.parse(stored) as CompanyAssociation[];
-      this.pendingCompanies.set(parsed);
+      const parsed = JSON.parse(stored) as unknown[];
+      this.pendingCompanies.set(this.normalizeAssociations(parsed));
     } catch {
       localStorage.removeItem(this.pendingCompaniesKey);
       this.pendingCompanies.set([]);
@@ -294,6 +328,78 @@ export class AuthService {
       requiresCompanySelection: requiresSelection,
       isSuperAdmin,
     };
+  }
+
+  private normalizeAssociations(raw: unknown[]): CompanyAssociation[] {
+    if (!Array.isArray(raw)) {
+      return [];
+    }
+
+    return raw
+      .map((item) => this.mapAssociation(item))
+      .filter((association): association is CompanyAssociation => association !== null);
+  }
+
+  private mapAssociation(raw: unknown): CompanyAssociation | null {
+    if (typeof raw !== 'object' || raw === null) {
+      return null;
+    }
+
+    const value = raw as Record<string, unknown>;
+
+    const companiaFromNested = value['compania'] as Record<string, unknown> | undefined;
+    const companiaId =
+      (companiaFromNested?.['id'] as string | undefined) ??
+      (value['companiaCorretajeId'] as string | undefined);
+
+    if (!companiaId || !companiaId.trim()) {
+      return null;
+    }
+
+    const companiaNombreRaw =
+      (companiaFromNested?.['nombre'] as string | undefined) ??
+      (value['companiaNombre'] as string | undefined);
+
+    const usuarioCompaniaId =
+      (value['usuarioCompaniaId'] as string | undefined) ??
+      (value['id'] as string | undefined);
+
+    const oficinaNested = value['oficina'] as Record<string, unknown> | undefined;
+    const oficinaId =
+      (oficinaNested?.['id'] as string | undefined) ?? (value['oficinaId'] as string | undefined);
+    const oficinaNombreRaw =
+      (oficinaNested?.['nombre'] as string | undefined) ??
+      (value['oficinaNombre'] as string | undefined);
+
+    const email = typeof value['email'] === 'string' ? value['email'] : '';
+    const rol = typeof value['rol'] === 'string' ? value['rol'] : '';
+
+    const companiaNombre =
+      typeof companiaNombreRaw === 'string' && companiaNombreRaw.trim()
+        ? companiaNombreRaw
+        : companiaId;
+
+    const association: CompanyAssociation = {
+      usuarioCompaniaId: usuarioCompaniaId || companiaId,
+      email,
+      rol,
+      compania: {
+        id: companiaId,
+        nombre: companiaNombre,
+      },
+    };
+
+    if (oficinaId && oficinaId.trim()) {
+      association.oficina = {
+        id: oficinaId,
+        nombre:
+          typeof oficinaNombreRaw === 'string' && oficinaNombreRaw.trim()
+            ? oficinaNombreRaw
+            : oficinaId,
+      };
+    }
+
+    return association;
   }
 
   private clearSession(): void {
